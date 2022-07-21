@@ -32,6 +32,8 @@
  */
  
  //test1提交
+ 
+ //test branch_uart commit 
 #include "main.h"
 // OLED显示信号量
 SemaphoreHandle_t OLED_Bin_SemaphoreHandle;
