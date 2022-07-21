@@ -30,6 +30,8 @@
  * @LastEditors: TOTHTOT
  * @FilePath: \USER\main.c
  */
+ 
+ //test1提交
 #include "main.h"
 // OLED显示信号量
 SemaphoreHandle_t OLED_Bin_SemaphoreHandle;
