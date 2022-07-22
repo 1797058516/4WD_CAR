@@ -2,17 +2,18 @@
  * @Description: main.h
  * @Author: TOTHTOT
  * @Date: 2022-07-14 16:40:37
- * @LastEditTime: 2022-07-21 16:25:02
+ * @LastEditTime: 2022-07-22 16:52:36
  * @LastEditors: TOTHTOT
  * @FilePath: \USER\main.h
  */
 #ifndef __MAIN_H
-#define __MAIN_H	 
+#define __MAIN_H
 
 /*SYSTEM*/
 #include "sys.h"
 #include "delay.h"
 #include "string.h"
+#include "config.h"
 /*FreeRTOS*/
 #include "FreeRTOS.h"
 #include "task.h"
@@ -33,9 +34,7 @@
 #include "music.h"
 #include "tft.h"
 
-/* 小车测试宏控制 */
-#define TEST_ENCODE 0   //编码器测试
-#define USART2_TEST 0   //串口2测试控制
+
 
 //任务优先级
 #define START_TASK_PRIO 1
@@ -91,7 +90,4 @@ TaskHandle_t Play_MusicTask_Handler;
 //任务函数
 void play_music_task(void *pvParameters);
 
-
-
 #endif
-

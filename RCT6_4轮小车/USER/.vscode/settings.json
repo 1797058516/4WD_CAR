@@ -10,6 +10,7 @@
         "tb6612.h": "c",
         "delay.h": "c",
         "freertos.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "beep.h": "c"
     }
 }

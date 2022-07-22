@@ -32,6 +32,7 @@
 ..\obj\main.o: ..\STM32F10x_FWLib\inc\misc.h
 ..\obj\main.o: ..\SYSTEM\delay\delay.h
 ..\obj\main.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\string.h
+..\obj\main.o: config.h
 ..\obj\main.o: ..\FreeRTOS\include\FreeRTOS.h
 ..\obj\main.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stddef.h
 ..\obj\main.o: ..\FreeRTOS\include\FreeRTOSConfig.h

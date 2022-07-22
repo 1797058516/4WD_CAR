@@ -2,13 +2,13 @@
  * @Description: adc.h
  * @Author: TOTHTOT
  * @Date: 2022-07-18 20:53:24
- * @LastEditTime: 2022-07-19 19:51:34
+ * @LastEditTime: 2022-07-22 17:44:15
  * @LastEditors: TOTHTOT
- * @FilePath: \USERe:\Learn\stm32\实例\RCT6_4轮小车\HARDWARE\ADC\adc.c
+ * @FilePath: \USERe:\Github\4WD_CAR\RCT6_4轮小车\HARDWARE\ADC\adc.c
  */
 #include "adc.h"
 #include "tb6612.h"
-
+#include "config.h"
 u16 ADC_Value = 0;
 /**
  * @name: DMA_Init
@@ -94,7 +94,28 @@ void ADC4_Init(void)
  */
 float output_voltage(u16 value)
 {
+    #if USE_VOLATGE
     float adc = (float) (ADC_MAX_VOLTAGE/4096)*value;
     adc =  adc/VM_M*BATTERY_VOLTAGE;
+    #endif
+    #if USE_ANGLESENOR
+    float adc = (float) (3.3/4096)*value;
+    #endif
     return adc;
 }
+
+#if USE_ANGLESENOR
+/**
+ * @name: ADC_To_Angle
+ * @msg: 电压和角度成线性关系3.3最大0最小
+ * @param {float} dianya
+ * @return {*}
+ */
+float ADC_To_Angle(float dianya)
+{
+    float angle = 0.0f;
+    angle = (dianya/3.3)*360.0f;
+    return angle;
+}
+#endif
+

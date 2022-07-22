@@ -32,3 +32,4 @@
 ..\obj\adc.o: ..\STM32F10x_FWLib\inc\misc.h
 ..\obj\adc.o: ..\HARDWARE\TB6612\tb6612.h
 ..\obj\adc.o: ..\HARDWARE\PID\pid.h
+..\obj\adc.o: ..\USER\config.h

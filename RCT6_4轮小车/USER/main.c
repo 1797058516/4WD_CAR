@@ -30,10 +30,10 @@
  * @LastEditors: TOTHTOT
  * @FilePath: \USER\main.c
  */
- 
- //test1提交
- 
- //test branch_uart commit 
+
+// test1提交
+
+// test branch_uart commit
 #include "main.h"
 // OLED显示信号量
 SemaphoreHandle_t OLED_Bin_SemaphoreHandle;
@@ -50,23 +50,23 @@ int main(void)
 {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); //设置系统中断优先级分组4
     delay_init();                                   //延时函数初始化
-    uart_init(921600);                              //初始化串口
-   /*  USART2_Init(115200);                            //串口2初始化
-    usart3_init(115200);                            //串口3初始化
-    usart5_init(115200);                            //串口5初始化 */
+    uart_init(256000);                              //初始化串口
+                                                    /*  USART2_Init(115200);                            //串口2初始化
+                                                     usart3_init(115200);                            //串口3初始化
+                                                     usart5_init(115200);                            //串口5初始化 */
     LED_Init();                                     //初始化LED
     // OLED_Init();                                    // OLED初始化
-    KEY_Init();                                     //按键初始化
-    TB6612_Init();                                  // TB6612初始化
-    PID_Init();                                     //初始化PID
-    ADC4_Init();                                    //ADC初始化
-    Beep_Init();                                    //Beep初始化
-    
-    Timer2_PWM_Init(3600 - 1, 0);                   //初始化定时器2输出4路20KHz的pwm
-    Timer3_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
-    Timer4_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
-    Timer5_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
-    Timer8_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
+    KEY_Init();    //按键初始化
+    TB6612_Init(); // TB6612初始化
+    PID_Init();    //初始化PID
+    ADC4_Init();   // ADC初始化
+    Beep_Init();   // Beep初始化
+
+    Timer2_PWM_Init(3600 - 1, 0);  //初始化定时器2输出4路20KHz的pwm
+    Timer3_Encoder_Init(65535, 0); //初始化定时器为编码器模式
+    Timer4_Encoder_Init(65535, 0); //初始化定时器为编码器模式
+    Timer5_Encoder_Init(65535, 0); //初始化定时器为编码器模式
+    Timer8_Encoder_Init(65535, 0); //初始化定时器为编码器模式
 
     //设置占空比
     TIM_SetCompare1(TIM2, 0);
@@ -79,10 +79,10 @@ int main(void)
     Car_Direction(stop, 4);
     LCD_ShowChar(0, 0, 'A', 1);
     // LCD初始化必须放在最后!!!!!
-    Lcd_Init();
+    // Lcd_Init();
     LCD_Clear(WHITE); //清屏
-    BACK_COLOR=WHITE;
-	POINT_COLOR=RED;	
+    BACK_COLOR = WHITE;
+    POINT_COLOR = RED;
     printf(" 初始化完成!!!\r\n");
     //创建开始任务
     xTaskCreate((TaskFunction_t)start_task,          //任务函数
@@ -157,7 +157,7 @@ void start_task(void *pvParameters)
     vTaskDelete(StartTask_Handler); //删除开始任务
     taskEXIT_CRITICAL();            //退出临界区
 }
-//extern u16 ADC_Value;
+// extern u16 ADC_Value;
 
 /**
  * @name: led0_task
@@ -169,7 +169,7 @@ void led0_task(void *pvParameters)
     while (1)
     {
         LED0 = ~LED0;
-        #if TEST_ENCODE
+#if TEST_ENCODE
         Read_Encode_Num(3);
         printf("num1:%d  ", Car_1.motro1_state.encode_num);
         Read_Encode_Num(4);
@@ -178,11 +178,11 @@ void led0_task(void *pvParameters)
         printf("num3:%d  ", Car_1.motro3_state.encode_num);
         Read_Encode_Num(8);
         printf("num4:%d\r\n", Car_1.motro4_state.encode_num);
-        #endif
+#endif
         // printf("led task\r\n");
-        //sound1();
-       /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
-        temp = temp/VM_M*BATTERY_VOLTAGE; */
+        // sound1();
+        /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
+         temp = temp/VM_M*BATTERY_VOLTAGE; */
         delay_ms(500);
     }
 }
@@ -193,14 +193,14 @@ void led0_task(void *pvParameters)
  * @return {*}
  */
 void oled_task(void *pvParameters)
-{ 
+{
     u8 voltage_str[20];
     while (1)
     {
         // xSemaphoreTake(OLED_Bin_SemaphoreHandle, portMAX_DELAY);
         // printf("refresh oled data\n\r");
         // printf("adc:%d, %f\r\n", Car_1.car_battery_voltage, output_voltage(Car_1.car_battery_voltage));
-        sprintf((char*)voltage_str, "%2.2fV", output_voltage(Car_1.car_battery_voltage));
+        sprintf((char *)voltage_str, "%2.2fV", output_voltage(Car_1.car_battery_voltage));
         LCD_ShowString(0, 0, voltage_str);
         // main_page_data()
         delay_ms(200);
@@ -218,6 +218,9 @@ void pid_task(void *pvParameters)
     while (1)
     {
         // taskENTER_CRITICAL(); //进入临界区
+#if USE_ANGLESENOR
+        printf("%f\r\n", ADC_To_Angle(output_voltage(Car_1.car_battery_voltage)));
+#endif
 
         // taskEXIT_CRITICAL();  //退出临界区
         delay_ms(Car_PID_CYCLE);
@@ -269,15 +272,15 @@ void key_task(void *pvParameters)
  */
 void play_music_task(void *pvParameters)
 {
-    u16 i = 75;           
-    while(1)
+    u16 i = 75;
+    while (1)
     {
         xSemaphoreTake(BEEP_Bin_SemaphoreHandle, portMAX_DELAY);
-        Beep_Voice(&Beep, 2, f[i], JP[i]*208);
+        Beep_Voice(&Beep, 2, f[i], JP[i] * 208);
         // Beep_Voice(&Beep, 30, 262, 500);
         printf("i:%d\r\n", i);
         i++;
-        if(i == strlen((char*)JP)-2)
+        if (i == strlen((char *)JP) - 2)
         {
             i = 0;
             Beep.beep_play_music = beep_disable;
