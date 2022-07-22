@@ -51,11 +51,11 @@ int main(void)
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); //设置系统中断优先级分组4
     delay_init();                                   //延时函数初始化
     uart_init(921600);                              //初始化串口
-   /*  USART2_Init(115200);                            //串口2初始化
+    USART2_Init(115200);                            //串口2初始化
     usart3_init(115200);                            //串口3初始化
     usart5_init(115200);                            //串口5初始化 */
     LED_Init();                                     //初始化LED
-    // OLED_Init();                                    // OLED初始化
+     OLED_Init();                                    // OLED初始化
     KEY_Init();                                     //按键初始化
     TB6612_Init();                                  // TB6612初始化
     PID_Init();                                     //初始化PID
@@ -79,7 +79,7 @@ int main(void)
     Car_Direction(stop, 4);
     LCD_ShowChar(0, 0, 'A', 1);
     // LCD初始化必须放在最后!!!!!
-    Lcd_Init();
+    //Lcd_Init();
     LCD_Clear(WHITE); //清屏
     BACK_COLOR=WHITE;
 	POINT_COLOR=RED;	
@@ -183,6 +183,8 @@ void led0_task(void *pvParameters)
         //sound1();
        /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
         temp = temp/VM_M*BATTERY_VOLTAGE; */
+				//u3_printf("led task");
+				printf("led task");
         delay_ms(500);
     }
 }
