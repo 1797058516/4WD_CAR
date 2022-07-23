@@ -2,7 +2,7 @@
  * @Description: main.h
  * @Author: TOTHTOT
  * @Date: 2022-07-14 16:40:37
- * @LastEditTime: 2022-07-21 16:25:02
+ * @LastEditTime: 2022-07-23 14:55:39
  * @LastEditors: TOTHTOT
  * @FilePath: \USER\main.h
  */
@@ -32,6 +32,9 @@
 #include "beep.h"
 #include "music.h"
 #include "tft.h"
+#include "mpu6050.h"
+#include "inv_mpu.h"
+#include "inv_mpu_dmp_motion_driver.h"
 #include "bsp_usart_dma.h"
 /* 小车测试宏控制 */
 #define TEST_ENCODE 0   //编码器测试
@@ -91,6 +94,14 @@ TaskHandle_t Play_MusicTask_Handler;
 //任务函数
 void play_music_task(void *pvParameters);
 
+//任务优先级
+#define MPU6050_TASK_PRIO 4
+//任务堆栈大小
+#define MPU6050_STK_SIZE 180
+//任务句柄
+TaskHandle_t MPU6050Task_Handler;
+//任务函数
+void MPU6050_task(void *pvParameters);
 
 
 #endif
