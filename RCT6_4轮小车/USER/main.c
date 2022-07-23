@@ -205,8 +205,8 @@ void led0_task(void *pvParameters)
 				//DMA_USART1_Tx_Data(dmabuf1,99);
 				//USART1_printf("AA");
 				u1_printf("ackdj:%d\r\n", 22);
-
-
+				
+				delay_ms(500);
     }
 }
 /**
