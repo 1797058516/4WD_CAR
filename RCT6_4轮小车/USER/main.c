@@ -51,7 +51,6 @@ EventGroupHandle_t Key_EventGroupHandle;
 
 int main(void)
 {
-    u8 err = 0;
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); //设置系统中断优先级分组4
     delay_init();                                   //延时函数初始化
     uart_init(921600);                              //初始化串口
