@@ -3,7 +3,7 @@
 ..\obj\usart5.o: ..\SYSTEM\sys\sys.h
 ..\obj\usart5.o: ..\USER\stm32f10x.h
 ..\obj\usart5.o: ..\CORE\core_cm3.h
-..\obj\usart5.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\usart5.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\usart5.o: ..\USER\system_stm32f10x.h
 ..\obj\usart5.o: ..\USER\stm32f10x_conf.h
 ..\obj\usart5.o: ..\STM32F10x_FWLib\inc\stm32f10x_adc.h
