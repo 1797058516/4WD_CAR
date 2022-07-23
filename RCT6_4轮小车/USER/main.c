@@ -187,23 +187,6 @@ void led0_task(void *pvParameters)
        /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
         temp = temp/VM_M*BATTERY_VOLTAGE; */
 				//u3_printf("led task");
-				
-				//printf("%d\r\n",pid++);
-//				 for(i=0;i<SENDBUFF_SIZE;i++)
-//				{
-//						SendBuff[i]	 = 'P';
-//    
-//				}
-				//USART_DMACmd(USART1,USART_DMAReq_Tx , DISABLE);
-				//DMA1_Channel4->CNDTR = 10;       		//3.设置要传输的数据量buffersize个
-				//DMA_Cmd(DMA1_Channel4, ENABLE );
-
-
-				//USART_DMACmd(USART1,USART_DMAReq_Tx , ENABLE);
-				//DMA_Cmd(DMA1_Channel4, DISABLE );
-
-				//DMA_USART1_Tx_Data(dmabuf1,99);
-				//USART1_printf("AA");
 				u1_printf("ackdj:%d\r\n", 22);
 				
 				delay_ms(500);
