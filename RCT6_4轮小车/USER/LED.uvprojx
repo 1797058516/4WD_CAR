@@ -10,7 +10,7 @@
       <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\HARDWARE\LED;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\USART;..\HARDWARE\KEY;..\HARDWARE\TB6612;..\HARDWARE\PID;..\HARDWARE\ADC;..\HARDWARE\BEEP;..\HARDWARE\LCD</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\HARDWARE\LED;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\USART;..\HARDWARE\KEY;..\HARDWARE\TB6612;..\HARDWARE\PID;..\HARDWARE\ADC;..\HARDWARE\BEEP;..\HARDWARE\LCD;..\SYSTEM\usart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -482,6 +482,11 @@
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SYSTEM\usart\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_usart_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\usart\bsp_usart_dma.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,4 +1,15 @@
 {
+    "files.autoGuessEncoding": false,
+"[plaintext]": {
+    "files.encoding": "gb2312"
+},
+"[log]": {
+    "files.encoding": "gb2312"
+},
+"[batch]": {
+    "files.encoding": "gb2312"
+},
+
     "files.associations": {
         "main.h": "c",
         "led.h": "c",

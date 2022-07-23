@@ -335,6 +335,8 @@ void OLED_Init(void)
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); //使能A端口时钟
+	
+
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);    //要使用PB3, PB4, PA15需要使能复用以及关闭JTAG
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
     

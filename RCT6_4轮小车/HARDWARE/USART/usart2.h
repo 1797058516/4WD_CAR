@@ -1,10 +1,10 @@
 /*
- * @Author: your name
+ * @Author: TOTHTOT
  * @Date: 2022-03-31 17:22:34
- * @LastEditTime: 2022-04-02 11:27:25
- * @LastEditors: Please set LastEditors
- * @Description: ´ò¿ªkoroFileHeader²é¿´ÅäÖÃ ½øĞĞÉèÖÃ: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \USERe:\Learn\stm32\ÊµÀı\Ëşµõ¼à¿ØÏµÍ³µÄÓ²¼şÉè¼ÆÓëÊµÏÖ\ÏÂÎ»»ú³ÌĞò\HARDWARE\USART\usart2.h
+ * @LastEditTime: 2022-07-22 21:20:13
+ * @LastEditors: TOTHTOT
+ * @Description: æ‰“å¼€koroFileHeaderæŸ¥çœ‹é…ç½® è¿›è¡Œè®¾ç½®: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \USERe:\Github\4WD_CAR\RCT6_4è½®å°è½¦\HARDWARE\USART\usart2.h
  */
 #ifndef __USART2_H
 #define __USART2_H
@@ -14,7 +14,7 @@
 #define false 0
 #define true 1
 
-//¶¨ÒåÊı×é³¤¶È
+//å®šä¹‰æ•°ç»„é•¿åº¦
 #define GPS_Buffer_Length 80
 #define UTCTime_Length 11
 #define latitude_Length 11
@@ -22,22 +22,23 @@
 #define longitude_Length 12
 #define E_W_Length 2
 
-#define USART2_MAX_RECV_LEN 200 //×î´ó½ÓÊÕ»º´æ×Ö½ÚÊı
-#define USART2_MAX_SEND_LEN 400 //×î´ó·¢ËÍ»º´æ×Ö½ÚÊı
-#define USART2_RX_EN 1			// 0,²»½ÓÊÕ;1,½ÓÊÕ.
+#define USART2_MAX_RECV_LEN 200 //æœ€å¤§æ¥æ”¶ç¼“å­˜å­—èŠ‚æ•°
+#define USART2_MAX_SEND_LEN 400 //æœ€å¤§å‘é€ç¼“å­˜å­—èŠ‚æ•°
+#define USART2_RX_EN 1          // 0,ä¸æ¥æ”¶;1,æ¥æ”¶.
 
-extern u8 USART2_RX_BUF[USART2_MAX_RECV_LEN]; //½ÓÊÕ»º³å,×î´óUSART2_MAX_RECV_LEN×Ö½Ú
-extern u8 USART2_TX_BUF[USART2_MAX_SEND_LEN]; //·¢ËÍ»º³å,×î´óUSART2_MAX_SEND_LEN×Ö½Ú
-extern u16 USART2_RX_STA;					  //½ÓÊÕÊı¾İ×´Ì¬
-extern u8 en_senddata, u2_str_len, s2;
-extern u8 time_data_esp[22];
-
+typedef struct
+{
+    u8 USARTx_RX_BUF1[USART2_MAX_RECV_LEN]; //æ¥æ”¶ç¼“å†²,æœ€å¤§USART2_MAX_RECV_LENå­—èŠ‚
+    u8 USARTx_RX_BUF2[USART2_MAX_RECV_LEN]; //æ¥æ”¶ç¼“å†²,æœ€å¤§USART2_MAX_RECV_LENå­—èŠ‚
+    u8 USARTx_TX_BUF[USART2_MAX_SEND_LEN]; //å‘é€ç¼“å†²,æœ€å¤§USART2_MAX_SEND_LENå­—èŠ‚
+    u8 witchbuf;  
+    u16 USARTx_RX_STA;                     //æ¥æ”¶æ•°æ®çŠ¶æ€
+    u8 USARTx_TX_FLAG;
+}FIFO_DMA_H;
+extern FIFO_DMA_H Usart2_Handle;
 void USART2_Init(u32 My_BaudRate);
-void u2_printf(char* fmt,...); 
-
-
+void u2_printf(char *fmt, ...);
+void Usart2_DMA_Init(void);
+void DMA_USART2_Tx_Data(u8 *buffer, u32 size);
 
 #endif
-
-
-

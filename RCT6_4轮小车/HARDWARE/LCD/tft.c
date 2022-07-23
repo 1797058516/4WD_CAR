@@ -76,7 +76,7 @@ void Lcd_Init(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;//速度50MHz
  	GPIO_Init(GPIOA, &GPIO_InitStructure);	  //初始化GPIOD3,6
  	GPIO_SetBits(GPIOA,GPIO_Pin_11|GPIO_Pin_5|GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14);	
-	
+		//让PA14 等接口作为普通IO口！
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE); 
 
 

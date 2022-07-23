@@ -33,8 +33,15 @@
 #include "beep.h"
 #include "music.h"
 #include "tft.h"
+<<<<<<< HEAD
 
 
+=======
+#include "bsp_usart_dma.h"
+/* 小车测试宏控制 */
+#define TEST_ENCODE 0   //编码器测试
+#define USART2_TEST 0   //串口2测试控制
+>>>>>>> main
 
 //任务优先级
 #define START_TASK_PRIO 1
