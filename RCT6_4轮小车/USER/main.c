@@ -30,15 +30,17 @@
  * @LastEditors: TOTHTOT
  * @FilePath: \USER\main.c
  */
- 
- //test1提交
- 
- //test branch_uart commit 
+
+// test1提交
+
+// test branch_uart commit
 #include "main.h"
 // OLED显示信号量
 SemaphoreHandle_t OLED_Bin_SemaphoreHandle;
 // 音乐播放下一节拍信号量
 SemaphoreHandle_t BEEP_Bin_SemaphoreHandle;
+// MPU6050读取数据信号量
+SemaphoreHandle_t MPU6050_Bin_SemaphoreHandle;
 // 按键事件标志组
 EventGroupHandle_t Key_EventGroupHandle;
 /**
@@ -49,27 +51,29 @@ EventGroupHandle_t Key_EventGroupHandle;
 
 int main(void)
 {
+    u8 err = 0;
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); //设置系统中断优先级分组4
     delay_init();                                   //延时函数初始化
     uart_init(921600);                              //初始化串口
-		//USARTx_DMA_Config();														//配置使用串口1DMA模式 
-		USART1_TX_DMA_Config();
-    USART2_Init(115200);                            //串口2初始化
-    usart3_init(115200);                            //串口3初始化
-    usart5_init(115200);                            //串口5初始化 */
-    LED_Init();                                     //初始化LED
-     OLED_Init();                                    // OLED初始化
-    KEY_Init();                                     //按键初始化
-    TB6612_Init();                                  // TB6612初始化
-    PID_Init();                                     //初始化PID
-    ADC4_Init();                                    //ADC初始化
-    Beep_Init();                                    //Beep初始化
-
-    Timer2_PWM_Init(3600 - 1, 0);                   //初始化定时器2输出4路20KHz的pwm
-    Timer3_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
-    Timer4_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
-    Timer5_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
-    Timer8_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
+    // USARTx_DMA_Config();														//配置使用串口1DMA模式
+    USART1_TX_DMA_Config();
+    USART2_Init(115200); //串口2初始化
+    usart3_init(115200); //串口3初始化
+    usart5_init(115200); //串口5初始化 */
+    LED_Init();          //初始化LED
+    OLED_Init();         // OLED初始化
+    KEY_Init();          //按键初始化
+    TB6612_Init();       // TB6612初始化
+    PID_Init();          //初始化PID
+    ADC4_Init();         // ADC初始化
+    Beep_Init();         // Beep初始化
+    MPU_Init();          // MPU初始化
+   
+    Timer2_PWM_Init(3600 - 1, 0);  //初始化定时器2输出4路20KHz的pwm
+    Timer3_Encoder_Init(65535, 0); //初始化定时器为编码器模式
+    Timer4_Encoder_Init(65535, 0); //初始化定时器为编码器模式
+    Timer5_Encoder_Init(65535, 0); //初始化定时器为编码器模式
+    Timer8_Encoder_Init(65535, 0); //初始化定时器为编码器模式
 
     //设置占空比
     TIM_SetCompare1(TIM2, 0);
@@ -82,10 +86,10 @@ int main(void)
     Car_Direction(stop, 4);
     LCD_ShowChar(0, 0, 'A', 1);
     // LCD初始化必须放在最后!!!!!
-    //Lcd_Init();
+    // Lcd_Init();
     LCD_Clear(WHITE); //清屏
-    BACK_COLOR=WHITE;
-	POINT_COLOR=RED;	
+    BACK_COLOR = WHITE;
+    POINT_COLOR = RED;
     printf(" 初始化完成!!!\r\n");
     //创建开始任务
     xTaskCreate((TaskFunction_t)start_task,          //任务函数
@@ -105,6 +109,7 @@ int main(void)
  */
 void start_task(void *pvParameters)
 {
+    u8 err;
     taskENTER_CRITICAL(); //进入临界区
     //创建LED0任务
     xTaskCreate((TaskFunction_t)led0_task,
@@ -141,6 +146,13 @@ void start_task(void *pvParameters)
                 (void *)NULL,
                 (UBaseType_t)Play_Music_TASK_PRIO,
                 (TaskHandle_t *)&Play_MusicTask_Handler);
+    //创建MPU6050任务
+    xTaskCreate((TaskFunction_t)MPU6050_task,
+                (const char *)"music_task",
+                (uint16_t)MPU6050_STK_SIZE,
+                (void *)NULL,
+                (UBaseType_t)MPU6050_TASK_PRIO,
+                (TaskHandle_t *)&MPU6050Task_Handler);
 
     OLED_Bin_SemaphoreHandle = xSemaphoreCreateBinary();
     if (OLED_Bin_SemaphoreHandle == NULL)
@@ -148,19 +160,30 @@ void start_task(void *pvParameters)
     BEEP_Bin_SemaphoreHandle = xSemaphoreCreateBinary();
     if (BEEP_Bin_SemaphoreHandle == NULL)
         printf("Couldn't create BEEP_Bin_SemaphoreHandle\r\n'");
+    MPU6050_Bin_SemaphoreHandle = xSemaphoreCreateBinary();
+    if (MPU6050_Bin_SemaphoreHandle == NULL)
+        printf("Couldn't create MPU6050_Bin_SemaphoreHandle\r\n'");
     Key_EventGroupHandle = xEventGroupCreate();
     if (Key_EventGroupHandle == NULL)
         printf("Couldn't create Key_EventGroupHandle\r\n");
-    // OLED_Clear();
-    // OLED_ShowString(0, 0, "init success!", 16);
-    // delay_xms(300);
-    // OLED_Clear();
-    // main_page();
+/*     OLED_Clear();
+    OLED_ShowString(0, 0, "init success!", 16);
+    delay_xms(300);
+    OLED_Clear();
+    main_page(); */
     Boot_prompt_tone();
+    /* 避免应MPU6050自己的中断而打断初始化,且在信号量没有创建完成时而释放造成的错误 */
+    err = mpu_dmp_init();
+    while (err != 0)
+    {
+        err = mpu_dmp_init();
+        printf("初始化dmp error:%d\r\n", err);
+    }
+    MPU6050_INT_Init();
     vTaskDelete(StartTask_Handler); //删除开始任务
     taskEXIT_CRITICAL();            //退出临界区
 }
-//extern u16 ADC_Value;
+// extern u16 ADC_Value;
 
 /**
  * @name: led0_task
@@ -172,7 +195,7 @@ void led0_task(void *pvParameters)
     while (1)
     {
         LED0 = ~LED0;
-        #if TEST_ENCODE
+#if TEST_ENCODE
         Read_Encode_Num(3);
         printf("num1:%d  ", Car_1.motro1_state.encode_num);
         Read_Encode_Num(4);
@@ -181,15 +204,15 @@ void led0_task(void *pvParameters)
         printf("num3:%d  ", Car_1.motro3_state.encode_num);
         Read_Encode_Num(8);
         printf("num4:%d\r\n", Car_1.motro4_state.encode_num);
-        #endif
+#endif
         // printf("led task\r\n");
-        //sound1();
-       /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
-        temp = temp/VM_M*BATTERY_VOLTAGE; */
-				//u3_printf("led task");
-				u1_printf("ackdj:%d\r\n", 22);
-				
-				delay_ms(500);
+        // sound1();
+        /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
+         temp = temp/VM_M*BATTERY_VOLTAGE; */
+        // u3_printf("led task");
+        // u1_printf("ackdj:%d\r\n", 22);
+
+        delay_ms(500);
     }
 }
 /**
@@ -199,14 +222,14 @@ void led0_task(void *pvParameters)
  * @return {*}
  */
 void oled_task(void *pvParameters)
-{ 
+{
     u8 voltage_str[20];
     while (1)
     {
         // xSemaphoreTake(OLED_Bin_SemaphoreHandle, portMAX_DELAY);
         // printf("refresh oled data\n\r");
         // printf("adc:%d, %f\r\n", Car_1.car_battery_voltage, output_voltage(Car_1.car_battery_voltage));
-        sprintf((char*)voltage_str, "%2.2fV", output_voltage(Car_1.car_battery_voltage));
+        sprintf((char *)voltage_str, "%2.2fV", output_voltage(Car_1.car_battery_voltage));
         LCD_ShowString(0, 0, voltage_str);
         // main_page_data()
         delay_ms(200);
@@ -275,20 +298,44 @@ void key_task(void *pvParameters)
  */
 void play_music_task(void *pvParameters)
 {
-    u16 i = 75;           
-    while(1)
+    u16 i = 75;
+    while (1)
     {
         xSemaphoreTake(BEEP_Bin_SemaphoreHandle, portMAX_DELAY);
-        Beep_Voice(&Beep, 2, f[i], JP[i]*208);
+        Beep_Voice(&Beep, 2, f[i], JP[i] * 208);
         // Beep_Voice(&Beep, 30, 262, 500);
         printf("i:%d\r\n", i);
         i++;
-        if(i == strlen((char*)JP)-2)
+        if (i == strlen((char *)JP) - 2)
         {
             i = 0;
             Beep.beep_play_music = beep_disable;
             printf("结束\r\n");
         }
         delay_ms(100);
+    }
+}
+
+/**
+ * @name: MPU6050_task
+ * @msg: 读取MPU6050数据任务,MPU6050_Bin_SemaphoreHandle信号量置1读取
+ * @param {void} *pvParameters
+ * @return {*}
+ */
+void MPU6050_task(void *pvParameters)
+{
+    float pitch, roll, yaw;    //欧拉角
+    float aacx, aacy, aacz;    //加速度传感器原始数据
+    short gyrox, gyroy, gyroz; //陀螺仪原始数据
+    short temp;                //温度
+    while (1)
+    {
+        xSemaphoreTake(MPU6050_Bin_SemaphoreHandle, portMAX_DELAY);
+        temp = MPU_Get_Temperature();               //得到温度值
+        mpu_dmp_get_data(&pitch, &roll, &yaw);      //得到欧拉角
+        MPU_Get_Accelerometer(&aacx, &aacy, &aacz); //得到加速度传感器数据
+        MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);  //得到陀螺仪数据
+        u1_printf("%f  %f  %f  %d  %d  %d  %fC  \r\n", pitch, roll, yaw, gyrox, gyroy, gyroz, temp / 10.0);
+        delay_ms(5);
     }
 }
