@@ -1,0 +1,26 @@
+{
+    "files.autoGuessEncoding": false,
+"[plaintext]": {
+    "files.encoding": "gb2312"
+},
+"[log]": {
+    "files.encoding": "gb2312"
+},
+"[batch]": {
+    "files.encoding": "gb2312"
+},
+
+    "files.associations": {
+        "main.h": "c",
+        "led.h": "c",
+        "timer.h": "c",
+        "oled.h": "c",
+        "usart.h": "c",
+        "pid.h": "c",
+        "task.h": "c",
+        "tb6612.h": "c",
+        "delay.h": "c",
+        "freertos.h": "c",
+        "time.h": "c"
+    }
+}
