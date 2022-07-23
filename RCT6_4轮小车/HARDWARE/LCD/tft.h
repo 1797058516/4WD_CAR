@@ -56,7 +56,7 @@
 #define LCD_CMD  0	//写命令
 #define LCD_DATA 1	//写数据
 
-extern  u16 BACK_COLOR, POINT_COLOR;   //背景色，画笔色
+//extern  u16 BACK_COLOR, POINT_COLOR;   //背景色，画笔色
 
 void Lcd_Init(void); 
 void LCD_Clear(u16 Color);

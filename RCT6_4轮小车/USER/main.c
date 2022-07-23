@@ -51,7 +51,7 @@ int main(void)
 {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); //设置系统中断优先级分组4
     delay_init();                                   //延时函数初始化
-<<<<<<< HEAD
+
     uart_init(256000);                              //初始化串口
                                                     /*  USART2_Init(115200);                            //串口2初始化
                                                      usart3_init(115200);                            //串口3初始化
@@ -69,7 +69,7 @@ int main(void)
     Timer4_Encoder_Init(65535, 0); //初始化定时器为编码器模式
     Timer5_Encoder_Init(65535, 0); //初始化定时器为编码器模式
     Timer8_Encoder_Init(65535, 0); //初始化定时器为编码器模式
-=======
+
     uart_init(921600);                              //初始化串口
 		//USARTx_DMA_Config();														//配置使用串口1DMA模式 
 		USART1_TX_DMA_Config();
@@ -89,7 +89,7 @@ int main(void)
     Timer4_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
     Timer5_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
     Timer8_Encoder_Init(65535, 0);                  //初始化定时器为编码器模式
->>>>>>> main
+
 
     //设置占空比
     TIM_SetCompare1(TIM2, 0);
@@ -102,14 +102,11 @@ int main(void)
     Car_Direction(stop, 4);
     LCD_ShowChar(0, 0, 'A', 1);
     // LCD初始化必须放在最后!!!!!
-<<<<<<< HEAD
     // Lcd_Init();
-=======
     //Lcd_Init();
->>>>>>> main
-    LCD_Clear(WHITE); //清屏
-    BACK_COLOR = WHITE;
-    POINT_COLOR = RED;
+//    LCD_Clear(WHITE); //清屏
+//    BACK_COLOR = WHITE;
+//    POINT_COLOR = RED;
     printf(" 初始化完成!!!\r\n");
     //创建开始任务
     xTaskCreate((TaskFunction_t)start_task,          //任务函数
@@ -207,12 +204,11 @@ void led0_task(void *pvParameters)
         printf("num4:%d\r\n", Car_1.motro4_state.encode_num);
 #endif
         // printf("led task\r\n");
-<<<<<<< HEAD
         // sound1();
         /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
          temp = temp/VM_M*BATTERY_VOLTAGE; */
         delay_ms(500);
-=======
+
         //sound1();
        /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
         temp = temp/VM_M*BATTERY_VOLTAGE; */
@@ -220,7 +216,6 @@ void led0_task(void *pvParameters)
 				u1_printf("ackdj:%d\r\n", 22);
 				
 				delay_ms(500);
->>>>>>> main
     }
 }
 /**
