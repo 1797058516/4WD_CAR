@@ -46,9 +46,7 @@ EventGroupHandle_t Key_EventGroupHandle;
  * @msg: 主函数
  * @return {*}
  */
- u8 dmabuf[100];
-  u8 dmabuf1[100];
- int pid,i;
+
 int main(void)
 {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); //设置系统中断优先级分组4
@@ -56,7 +54,6 @@ int main(void)
     uart_init(921600);                              //初始化串口
 		//USARTx_DMA_Config();														//配置使用串口1DMA模式 
 		USART1_TX_DMA_Config();
-		FIFO_DMA_INIT(&USARTD1);
     USART2_Init(115200);                            //串口2初始化
     usart3_init(115200);                            //串口3初始化
     usart5_init(115200);                            //串口5初始化 */
@@ -201,20 +198,15 @@ void led0_task(void *pvParameters)
 				//DMA1_Channel4->CNDTR = 10;       		//3.设置要传输的数据量buffersize个
 				//DMA_Cmd(DMA1_Channel4, ENABLE );
 
-				for(i=0;i<100;i++)
-				{
-						dmabuf1[i]	 = 'Q';
-    
-				}
+
 				//USART_DMACmd(USART1,USART_DMAReq_Tx , ENABLE);
 				//DMA_Cmd(DMA1_Channel4, DISABLE );
 
 				//DMA_USART1_Tx_Data(dmabuf1,99);
 				//USART1_printf("AA");
-				u1_printf("ackdj:%d\r\n",i);
-				i=0;
-				if(pid>100) pid=0;
-        delay_ms(500);
+				u1_printf("ackdj:%d\r\n", 22);
+
+
     }
 }
 /**

@@ -1,7 +1,7 @@
 ..\obj\timer.o: ..\HARDWARE\TIMER\timer.c
 ..\obj\timer.o: ..\FreeRTOS\include\FreeRTOS.h
-..\obj\timer.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stddef.h
-..\obj\timer.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\timer.o: D:\keil\ARM\ARMCC\Bin\..\include\stddef.h
+..\obj\timer.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\timer.o: ..\FreeRTOS\include\FreeRTOSConfig.h
 ..\obj\timer.o: ..\SYSTEM\sys\sys.h
 ..\obj\timer.o: ..\USER\stm32f10x.h
@@ -33,7 +33,7 @@
 ..\obj\timer.o: ..\STM32F10x_FWLib\inc\stm32f10x_wwdg.h
 ..\obj\timer.o: ..\STM32F10x_FWLib\inc\misc.h
 ..\obj\timer.o: ..\SYSTEM\usart\usart.h
-..\obj\timer.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\timer.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\timer.o: ..\FreeRTOS\include\projdefs.h
 ..\obj\timer.o: ..\FreeRTOS\include\portable.h
 ..\obj\timer.o: ..\FreeRTOS\include\deprecated_definitions.h
