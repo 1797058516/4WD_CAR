@@ -3,7 +3,7 @@
 ..\obj\key.o: ..\SYSTEM\sys\sys.h
 ..\obj\key.o: ..\USER\stm32f10x.h
 ..\obj\key.o: ..\CORE\core_cm3.h
-..\obj\key.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\key.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\key.o: ..\USER\system_stm32f10x.h
 ..\obj\key.o: ..\USER\stm32f10x_conf.h
 ..\obj\key.o: ..\STM32F10x_FWLib\inc\stm32f10x_adc.h
@@ -32,10 +32,10 @@
 ..\obj\key.o: ..\STM32F10x_FWLib\inc\misc.h
 ..\obj\key.o: ..\SYSTEM\delay\delay.h
 ..\obj\key.o: ..\FreeRTOS\include\FreeRTOS.h
-..\obj\key.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stddef.h
+..\obj\key.o: D:\keil\ARM\ARMCC\Bin\..\include\stddef.h
 ..\obj\key.o: ..\FreeRTOS\include\FreeRTOSConfig.h
 ..\obj\key.o: ..\SYSTEM\usart\usart.h
-..\obj\key.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\key.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\key.o: ..\FreeRTOS\include\projdefs.h
 ..\obj\key.o: ..\FreeRTOS\include\portable.h
 ..\obj\key.o: ..\FreeRTOS\include\deprecated_definitions.h

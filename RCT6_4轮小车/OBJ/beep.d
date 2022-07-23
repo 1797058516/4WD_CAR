@@ -3,7 +3,7 @@
 ..\obj\beep.o: ..\SYSTEM\sys\sys.h
 ..\obj\beep.o: ..\USER\stm32f10x.h
 ..\obj\beep.o: ..\CORE\core_cm3.h
-..\obj\beep.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\beep.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\beep.o: ..\USER\system_stm32f10x.h
 ..\obj\beep.o: ..\USER\stm32f10x_conf.h
 ..\obj\beep.o: ..\STM32F10x_FWLib\inc\stm32f10x_adc.h
@@ -33,4 +33,4 @@
 ..\obj\beep.o: ..\SYSTEM\delay\delay.h
 ..\obj\beep.o: ..\HARDWARE\TIMER\timer.h
 ..\obj\beep.o: ..\SYSTEM\usart\usart.h
-..\obj\beep.o: E:\Keil Programma\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\beep.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h

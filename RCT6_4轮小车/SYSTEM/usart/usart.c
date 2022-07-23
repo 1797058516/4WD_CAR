@@ -46,9 +46,6 @@ u8 witchbuf=0;                  		//标记当前使用的是哪个缓冲区,0：使用u1rxbuf；1
 u8 USART1_TX_FLAG=0;					//USART2发送标志，启动发送时置1
 u8 USART1_RX_FLAG=0;					//USART2接收标志，启动接收时置1
 
-
- FIFO_DMA_H USARTD1;
- 
 ////////////////////////////////////////////////////////////////// 
 //加入以下代码,支持printf函数,而不需要选择use MicroLIB	  
 #if 1
@@ -268,12 +265,6 @@ void DMA1_Channel4_IRQHandler(void)
 //	//DMA_USART1_Tx_Data(USARTD1.USARTx_TX_BUF,strlen((const char*)USART1_TX_BUF));	
 //}
 
-void FIFO_DMA_INIT(FIFO_DMA_H* USARTx)
-{
-	USARTx->USARTx_RX_BUF1=USART1_TX_BUF;
-	USARTx->rx_buf_size=100;
-
-}
 void u1_printf(char* format,...)
 {
 	//VA_LIST 是在C语言中解决变参问题的一组宏，所在头文件：#include <stdarg.h>，用于获取不确定个数的参数。
