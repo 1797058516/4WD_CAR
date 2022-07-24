@@ -1,44 +1,44 @@
 /*
- * @Description: beep.c æ— æºèœ‚é¸£å™¨ ä½ç”µå¹³è§¦å‘é…åˆä¸€ä¸ª10usçš„ä¸­æ–­ä½¿ç”¨
+ * @Description: beep.c ÎŞÔ´·äÃùÆ÷ µÍµçÆ½´¥·¢ÅäºÏÒ»¸ö10usµÄÖĞ¶ÏÊ¹ÓÃ
  * @Author: TOTHTOT
  * @Date: 2022-07-18 20:55:19
- * @LastEditTime: 2022-07-20 18:49:31
+ * @LastEditTime: 2022-07-24 19:04:00
  * @LastEditors: TOTHTOT
- * @FilePath: \USERe:\Learn\stm32\å®ä¾‹\RCT6_4è½®å°è½¦\HARDWARE\BEEP\beep.c
+ * @FilePath: \USERe:\Github\4WD_CAR\RCT6_4ÂÖĞ¡³µ\HARDWARE\BEEP\beep.c
  */
 #include "beep.h"
 #include "delay.h"
 #include "timer.h"
 #include "usart.h"
 S_BEEP_Handle Beep;
-//              ä½Si Do Re  Mi  Fa So  La  Si Â¸é«˜DoÂ¸é«˜ReÂ¸é«˜MiÂ¸é«˜FaÂ¸é«˜So æ— 
+//              µÍSi Do Re  Mi  Fa So  La  Si ?¸ßDo?¸ßRe?¸ßMi?¸ßFa?¸ßSo ÎŞ
 uc16 tone[] = {247, 262, 294, 330, 349, 392, 440, 294, 523, 587, 659, 698, 784, 1000};
 /**
  * @name: Beep_Init
- * @msg: åˆå§‹åŒ–æ— æºèœ‚é¸£å™¨ä½ç”µå¹³è§¦å‘
+ * @msg: ³õÊ¼»¯ÎŞÔ´·äÃùÆ÷µÍµçÆ½´¥·¢
  * @return {*}
  */
 void Beep_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); //ä½¿èƒ½PA,PDç«¯å£æ—¶é’Ÿ
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); //Ê¹ÄÜPA,PD¶Ë¿ÚÊ±ÖÓ
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;        // BEEP-->PB.15 ç«¯å£é…ç½®
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  //æ¨æŒ½è¾“å‡º
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; // IOå£é€Ÿåº¦ä¸º50MHz
-    GPIO_Init(GPIOB, &GPIO_InitStructure);            //æ ¹æ®è®¾å®šå‚æ•°åˆå§‹åŒ–GPIOB.15
-    GPIO_SetBits(GPIOB, GPIO_Pin_15);                 // PB.15 è¾“å‡ºé«˜
-    Timer1_Init(10 - 1, 72 - 1);                      //åˆå§‹åŒ–å®šæ—¶å™¨1,10usæº¢å‡ºä¸€æ¬¡,æœ€å¤§é¢‘ç‡100KHz
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;        // BEEP-->PB.15 ¶Ë¿ÚÅäÖÃ
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  //ÍÆÍìÊä³ö
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; // IO¿ÚËÙ¶ÈÎª50MHz
+    GPIO_Init(GPIOB, &GPIO_InitStructure);            //¸ù¾İÉè¶¨²ÎÊı³õÊ¼»¯GPIOB.15
+    GPIO_SetBits(GPIOB, GPIO_Pin_15);                 // PB.15 Êä³ö¸ß
+    Timer1_Init(10 - 1, 72 - 1);                      //³õÊ¼»¯¶¨Ê±Æ÷1,10usÒç³öÒ»´Î,×î´óÆµÂÊ100KHz
 }
 
 /**
  * @name: Beep_Voice
- * @msg: å‘å‡ºä¸€å®šé¢‘ç‡çš„å£°éŸ³
- * @param {S_BEEP_Handle} *b beepçš„ç»“æ„ä½“æŒ‡é’ˆ
- * @param {u8} volume éŸ³é‡
- * @param {float} Hz é¢‘ç‡
- * @param {u16} jp èŠ‚æ‹,å£°éŸ³æŒç»­æ—¶é—´å•ä½ms
+ * @msg: ·¢³öÒ»¶¨ÆµÂÊµÄÉùÒô
+ * @param {S_BEEP_Handle} *b beepµÄ½á¹¹ÌåÖ¸Õë
+ * @param {u8} volume ÒôÁ¿
+ * @param {float} Hz ÆµÂÊ
+ * @param {u16} jp ½ÚÅÄ,ÉùÒô³ÖĞøÊ±¼äµ¥Î»ms
  * @return {*}
  */
 void Beep_Voice(S_BEEP_Handle *b, u8 volume, float Hz, u16 jp)
@@ -46,21 +46,21 @@ void Beep_Voice(S_BEEP_Handle *b, u8 volume, float Hz, u16 jp)
     u16 h_time;
 
     b->beep_en = beep_enable;
-    b->pinlv = (float)1.0 / Hz * 1000000.0;   //è½¬æ¢æˆusçº§
-    h_time = b->pinlv * (100 - volume) / 100; //æ ¹æ®è®¾ç½®çš„éŸ³é‡è®¾ç½®é«˜ç”µå¹³æŒç»­æ—¶é—´è¶Šå°å£°éŸ³è¶Šå¤§
+    b->pinlv = (float)1.0 / Hz * 1000000.0;   //×ª»»³Éus¼¶
+    h_time = b->pinlv * (100 - volume) / 100; //¸ù¾İÉèÖÃµÄÒôÁ¿ÉèÖÃ¸ßµçÆ½³ÖĞøÊ±¼äÔ½Ğ¡ÉùÒôÔ½´ó
     b->high_time = h_time;
     b->pinlv_m = b->pinlv;
     b->jiepai = (int)((jp * 1000) / (1 / Hz * 1000000));
     // printf("pl:%f\r\n", b->pinlv);
     printf("vo:%d, jp:%d\r\n", h_time, (int)((jp * 1000) / (1 / Hz * 1000000)));
-    BEEP_ON; //ä½¿èƒ½å®šæ—¶å™¨
+    BEEP_ON; //Ê¹ÄÜ¶¨Ê±Æ÷
 }
 
 /**
  * @name: Beep_Do
- * @msg: å‘å‡ºDoéŸ³
- * @param {u8} volume éŸ³é‡
- * @param {u16} jp æŒç»­æ—¶é—´
+ * @msg: ·¢³öDoÒô
+ * @param {u8} volume ÒôÁ¿
+ * @param {u16} jp ³ÖĞøÊ±¼ä
  * @return {*}
  */
 void Beep_Do(u8 volume, u16 jp)
@@ -70,9 +70,9 @@ void Beep_Do(u8 volume, u16 jp)
 
 /**
  * @name: Beep_Re
- * @msg: å‘å‡ºReéŸ³
- * @param {u8} volume éŸ³é‡
- * @param {u16} jp æŒç»­æ—¶é—´
+ * @msg: ·¢³öReÒô
+ * @param {u8} volume ÒôÁ¿
+ * @param {u16} jp ³ÖĞøÊ±¼ä
  * @return {*}
  */
 void Beep_Re(u8 volume, u16 jp)
@@ -82,9 +82,9 @@ void Beep_Re(u8 volume, u16 jp)
 
 /**
  * @name: Beep_Mi
- * @msg: å‘å‡ºMiéŸ³
- * @param {u8} volume éŸ³é‡
- * @param {u16} jp æŒç»­æ—¶é—´
+ * @msg: ·¢³öMiÒô
+ * @param {u8} volume ÒôÁ¿
+ * @param {u16} jp ³ÖĞøÊ±¼ä
  * @return {*}
  */
 void Beep_Mi(u8 volume, u16 jp)
@@ -94,9 +94,9 @@ void Beep_Mi(u8 volume, u16 jp)
 
 /**
  * @name: Beep_Fa
- * @msg: å‘å‡ºFaéŸ³
- * @param {u8} volume éŸ³é‡
- * @param {u16} jp æŒç»­æ—¶é—´
+ * @msg: ·¢³öFaÒô
+ * @param {u8} volume ÒôÁ¿
+ * @param {u16} jp ³ÖĞøÊ±¼ä
  * @return {*}
  */
 void Beep_Fa(u8 volume, u16 jp)
@@ -106,9 +106,9 @@ void Beep_Fa(u8 volume, u16 jp)
 
 /**
  * @name: Beep_So
- * @msg: å‘å‡ºSoéŸ³
- * @param {u8} volume éŸ³é‡
- * @param {u16} jp æŒç»­æ—¶é—´
+ * @msg: ·¢³öSoÒô
+ * @param {u8} volume ÒôÁ¿
+ * @param {u16} jp ³ÖĞøÊ±¼ä
  * @return {*}
  */
 void Beep_So(u8 volume, u16 jp)
@@ -118,9 +118,9 @@ void Beep_So(u8 volume, u16 jp)
 
 /**
  * @name: Beep_La
- * @msg: å‘å‡ºLaéŸ³
- * @param {u8} volume éŸ³é‡
- * @param {u16} jp æŒç»­æ—¶é—´
+ * @msg: ·¢³öLaÒô
+ * @param {u8} volume ÒôÁ¿
+ * @param {u16} jp ³ÖĞøÊ±¼ä
  * @return {*}
  */
 void Beep_La(u8 volume, u16 jp)
@@ -130,9 +130,9 @@ void Beep_La(u8 volume, u16 jp)
 
 /**
  * @name: Beep_Si
- * @msg: å‘å‡ºSiéŸ³
- * @param {u8} volume éŸ³é‡
- * @param {u16} jp æŒç»­æ—¶é—´
+ * @msg: ·¢³öSiÒô
+ * @param {u8} volume ÒôÁ¿
+ * @param {u16} jp ³ÖĞøÊ±¼ä
  * @return {*}
  */
 void Beep_Si(u8 volume, u16 jp)
@@ -142,7 +142,7 @@ void Beep_Si(u8 volume, u16 jp)
 
 /**
  * @name: Show_Voice
- * @msg: è¾“å‡ºä¸ƒä¸ªéŸ³ç¬¦
+ * @msg: Êä³öÆß¸öÒô·û
  * @return {*}
  */
 void Show_Voice(void)
@@ -165,7 +165,7 @@ void Show_Voice(void)
 
 /**
  * @name: Boot_prompt_tone
- * @msg: å¼€æœºæç¤ºéŸ³
+ * @msg: ¿ª»úÌáÊ¾Òô
  * @return {*}
  */
 void Boot_prompt_tone(void)

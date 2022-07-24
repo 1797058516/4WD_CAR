@@ -195,27 +195,6 @@ void led0_task(void *pvParameters)
     while (1)
     {
         LED0 = ~LED0;
-        /* // 不知道为什么不能用宏
-        Read_Encode_Num(3);
-        u1_printf("num1:%d  ", Car_1.motro_state[0].encode_num);
-        Read_Encode_Num(4);
-        u1_printf("num2:%d  ", Car_1.motro_state[1].encode_num);
-        Read_Encode_Num(5);
-        u1_printf("num3:%d  ", Car_1.motro_state[2].encode_num);
-        Read_Encode_Num(8);
-        u1_printf("num4:%d\r\n", Car_1.motro_state[3].encode_num);                                                                          //获取编码器的计数值
-        Car_1.motro_state[0].distance = ((Car_1.motro_state[0].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * 3.142 * 4.8);                          //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
-        Car_1.motro_state[1].distance = ((Car_1.motro_state[1].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE )* Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
-        Car_1.motro_state[2].distance = ((Car_1.motro_state[2].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
-        Car_1.motro_state[3].distance = ((Car_1.motro_state[3].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
-
-        printf("1:%f, 2:%f, 3:%f\r\n", (float)Car_1.motro_state[0].total_encode_num,
-               (float)(Car_1.motro_state[0].total_encode_num / (13 * 20 * 4.0)),
-               (float)Car_1.motro_state[0].distance);
-
-        u1_printf("以走距离:%f, %f, %f, %f\r\n", Car_1.motro_state[0].distance,
-                  Car_1.motro_state[1].distance, Car_1.motro_state[2].distance, Car_1.motro_state[3].distance);
- */
         /*    Read_Encode_Num(3);
            u1_printf("num1:%d  ", Car_1.motro_state[0].encode_num);
            Read_Encode_Num(4);

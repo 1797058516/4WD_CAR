@@ -4,7 +4,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "tb6612.h"
-
+#include "beep.h"
 /* FreeRTOS */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -28,10 +28,13 @@ u16 USART2_RX_STA = 0;
  */
 FIFO_DMA_H Usart2_Handle;
 extern xSemaphoreHandle GPS_Bin_Semaphore;
+extern SemaphoreHandle_t BEEP_Bin_SemaphoreHandle;
 void USART2_IRQHandler(void)
 {
     u8 *p;
-    u8 USART2_RX_LEN = 0;                                  //接收数据长度
+    u8 USART2_RX_LEN = 0; //接收数据长度
+    BaseType_t pxHigherPriorityTaskWoken;
+                                     
     if (USART_GetITStatus(USART2, USART_IT_IDLE) != RESET) //串口2空闲中断
     {
         USART_ReceiveData(USART2);                                  //清除串口2空闲中断IDLE标志位
@@ -55,11 +58,17 @@ void USART2_IRQHandler(void)
 
         //******************↓↓↓↓↓这里作数据处理↓↓↓↓↓******************//
 
-        // DMA_USART2_Tx_Data(p, USART2_RX_LEN);
+        DMA_USART2_Tx_Data(p, USART2_RX_LEN);
         if(strstr((char*)p, "go")!=NULL)
         {
-            Car_Go(50, &Car_1, 100);
+            Car_Go(500, &Car_1, 100);
         }
+        else if(strstr((char*)p, "mu")!= NULL)
+        {
+            Beep.beep_play_music = beep_enable;
+            xSemaphoreGiveFromISR(BEEP_Bin_SemaphoreHandle, &pxHigherPriorityTaskWoken);
+        }
+
         //******************↑↑↑↑↑这里作数据处理↑↑↑↑↑******************//
     }
 }
