@@ -2,9 +2,9 @@
  * @Description: tb6612.c
  * @Author: TOTHTOT
  * @Date: 2022-07-18 09:33:39
- * @LastEditTime: 2022-07-21 16:11:00
+ * @LastEditTime: 2022-07-24 15:24:04
  * @LastEditors: TOTHTOT
- * @FilePath: \USERe:\Learn\stm32\å®ä¾‹\RCT6_4è½®å°è½¦\HARDWARE\TB6612\tb6612.c
+ * @FilePath: \USERe:\Github\4WD_CAR\RCT6_4ÂÖĞ¡³µ\HARDWARE\TB6612\tb6612.c
  */
 
 #include "tb6612.h"
@@ -12,7 +12,7 @@
 S_CAR_STATE Car_1;
 /**
  * @name: TB6612_Init
- * @msg: åˆå§‹åŒ–è½¦è½®çš„æ–¹å‘æ§åˆ¶IOå£
+ * @msg: ³õÊ¼»¯³µÂÖµÄ·½Ïò¿ØÖÆIO¿Ú
  * @return {*}
  */
 void TB6612_Init(void)
@@ -22,11 +22,11 @@ void TB6612_Init(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5; // ç«¯å£é…ç½®
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;                                                           //è¾“å‡º
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;                                                          // IOå£é€Ÿåº¦ä¸º50MHz
-    GPIO_Init(GPIOC, &GPIO_InitStructure);                                                                     //æ ¹æ®è®¾å®šå‚æ•°åˆå§‹åŒ–
-    GPIO_ResetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5);        // è¾“å‡ºä½
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5; // ¶Ë¿ÚÅäÖÃ
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;                                                           //Êä³ö
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;                                                          // IO¿ÚËÙ¶ÈÎª50MHz
+    GPIO_Init(GPIOC, &GPIO_InitStructure);                                                                     //¸ù¾İÉè¶¨²ÎÊı³õÊ¼»¯
+    GPIO_ResetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5);        // Êä³öµÍ
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
@@ -35,9 +35,9 @@ void TB6612_Init(void)
 
 /**
  * @name:  Car_Direction
- * @msg: å°è½¦æ–¹å‘æ§åˆ¶,æ–¹å‘æ²¡æœ‰è°ƒæ•´
- * @param {E_CAR_DIRECTION} direction æ§åˆ¶æ­£åè½¬
- * @param {u8} motor    é€‰æ‹©æ§åˆ¶çš„ç”µæœº
+ * @msg: Ğ¡³µ·½Ïò¿ØÖÆ,·½ÏòÃ»ÓĞµ÷Õû
+ * @param {E_CAR_DIRECTION} direction ¿ØÖÆÕı·´×ª
+ * @param {u8} motor    Ñ¡Ôñ¿ØÖÆµÄµç»ú
  * @return {*}
  */
 void Car_Direction(E_CAR_DIRECTION direction, u8 motor)
@@ -47,75 +47,75 @@ void Car_Direction(E_CAR_DIRECTION direction, u8 motor)
     case 1:
         if (direction == zhengzhuan)
         {
-            M1_AIN1 = Car_IO_HIGH;
-            M1_AIN2 = Car_IO_LOW; //æ­£è½¬
+            M1_AIN1 = Car_IO_LOW;
+            M1_AIN2 = Car_IO_HIGH; //Õı×ª
             printf("1\r\n");
         }
         else if (direction == fanzhuan)
         {
-            M1_AIN1 = Car_IO_LOW;
-            M1_AIN2 = Car_IO_HIGH; //åè½¬
+            M1_AIN1 = Car_IO_HIGH;
+            M1_AIN2 = Car_IO_LOW; //·´×ª
             printf("2\r\n");
         }
         else
         {
             M1_AIN1 = Car_IO_LOW;
-            M1_AIN2 = Car_IO_LOW; //åœæ­¢
+            M1_AIN2 = Car_IO_LOW; //Í£Ö¹
         }
         break;
     case 2:
         if (direction == zhengzhuan)
         {
-            M2_BIN1 = Car_IO_HIGH;
-            M2_BIN2 = Car_IO_LOW; //æ­£è½¬
 
+            M2_BIN1 = Car_IO_LOW;
+            M2_BIN2 = Car_IO_HIGH; // Õı×ª
             printf("3\r\n");
         }
         else if (direction == fanzhuan)
         {
-            M2_BIN1 = Car_IO_LOW;
-            M2_BIN2 = Car_IO_HIGH; // åè½¬
+            M2_BIN1 = Car_IO_HIGH;
+            M2_BIN2 = Car_IO_LOW; //·´×ª
             printf("4\r\n");
         }
         else
         {
             M2_BIN1 = Car_IO_LOW;
-            M2_BIN2 = Car_IO_LOW; //åœæ­¢
+            M2_BIN2 = Car_IO_LOW; //Í£Ö¹
         }
         break;
     case 3:
         if (direction == zhengzhuan)
         {
-            M3_AIN1 = Car_IO_HIGH;
-            M3_AIN2 = Car_IO_LOW; //æ­£è½¬
+            M3_AIN1 = Car_IO_LOW;
+            M3_AIN2 = Car_IO_HIGH; //Õı×ª
             printf("5\r\n");
         }
         else if (direction == fanzhuan)
         {
-            M3_AIN1 = Car_IO_LOW;
-            M3_AIN2 = Car_IO_HIGH; //åè½¬
+            M3_AIN1 = Car_IO_HIGH;
+            M3_AIN2 = Car_IO_LOW; //·´×ª
         }
         else
         {
             M3_AIN1 = Car_IO_LOW;
-            M3_AIN2 = Car_IO_LOW; //åœæ­¢
+            M3_AIN2 = Car_IO_LOW; //Í£Ö¹
         }
         break;
     case 4:
         if (direction == zhengzhuan)
         {
             M4_BIN1 = Car_IO_HIGH;
-            M4_BIN2 = Car_IO_LOW; //æ­£è½¬
+            M4_BIN2 = Car_IO_LOW; //Õı×ª
         }
         else if (direction == fanzhuan)
         {
             M4_BIN1 = Car_IO_LOW;
-            M4_BIN2 = Car_IO_HIGH; //åè½¬
+            M4_BIN2 = Car_IO_HIGH; //·´×ª
         }
         else
         {
             M4_BIN1 = Car_IO_LOW;
-            M4_BIN2 = Car_IO_LOW; //åœæ­¢
+            M4_BIN2 = Car_IO_LOW; //Í£Ö¹
         }
         break;
     }
@@ -123,61 +123,136 @@ void Car_Direction(E_CAR_DIRECTION direction, u8 motor)
     {
     case forward:
         M1_AIN1 = Car_IO_HIGH;
-        M1_AIN2 = Car_IO_LOW; //æ­£è½¬
+        M1_AIN2 = Car_IO_LOW; //Õı×ª
         M2_BIN1 = Car_IO_HIGH;
-        M2_BIN2 = Car_IO_LOW; //æ­£è½¬
+        M2_BIN2 = Car_IO_LOW; //Õı×ª
         M3_AIN1 = Car_IO_HIGH;
-        M3_AIN2 = Car_IO_LOW; //æ­£è½¬
+        M3_AIN2 = Car_IO_LOW; //Õı×ª
         M4_BIN1 = Car_IO_HIGH;
-        M4_BIN2 = Car_IO_LOW; //æ­£è½¬
+        M4_BIN2 = Car_IO_LOW; //Õı×ª
         break;
     case retreat:
         M1_AIN1 = Car_IO_LOW;
-        M1_AIN2 = Car_IO_HIGH; //åè½¬
+        M1_AIN2 = Car_IO_HIGH; //·´×ª
         M2_BIN1 = Car_IO_LOW;
-        M2_BIN2 = Car_IO_HIGH; //åè½¬
+        M2_BIN2 = Car_IO_HIGH; //·´×ª
         M3_AIN1 = Car_IO_LOW;
-        M3_AIN2 = Car_IO_HIGH; //åè½¬
+        M3_AIN2 = Car_IO_HIGH; //·´×ª
         M4_BIN1 = Car_IO_LOW;
-        M4_BIN2 = Car_IO_HIGH; //åè½¬
+        M4_BIN2 = Car_IO_HIGH; //·´×ª
         break;
     case turn_right:
         M1_AIN1 = Car_IO_HIGH;
-        M1_AIN2 = Car_IO_LOW; //æ­£è½¬
+        M1_AIN2 = Car_IO_LOW; //Õı×ª
         M2_BIN1 = Car_IO_LOW;
-        M2_BIN2 = Car_IO_HIGH; //åè½¬
+        M2_BIN2 = Car_IO_HIGH; //·´×ª
         M3_AIN1 = Car_IO_HIGH;
-        M3_AIN2 = Car_IO_LOW; //æ­£è½¬
+        M3_AIN2 = Car_IO_LOW; //Õı×ª
         M4_BIN1 = Car_IO_LOW;
-        M4_BIN2 = Car_IO_HIGH; //åè½¬
+        M4_BIN2 = Car_IO_HIGH; //·´×ª
         break;
     case turn_left:
         M1_AIN1 = Car_IO_LOW;
-        M1_AIN2 = Car_IO_HIGH; //åè½¬
+        M1_AIN2 = Car_IO_HIGH; //·´×ª
         M2_BIN1 = Car_IO_HIGH;
-        M2_BIN2 = Car_IO_LOW; //æ­£è½¬
+        M2_BIN2 = Car_IO_LOW; //Õı×ª
         M3_AIN1 = Car_IO_LOW;
-        M3_AIN2 = Car_IO_HIGH; //åè½¬
+        M3_AIN2 = Car_IO_HIGH; //·´×ª
         M4_BIN1 = Car_IO_HIGH;
-        M4_BIN2 = Car_IO_LOW; //æ­£è½¬
+        M4_BIN2 = Car_IO_LOW; //Õı×ª
         break;
     case stop:
         M1_AIN1 = Car_IO_LOW;
-        M1_AIN2 = Car_IO_LOW; //åœæ­¢
+        M1_AIN2 = Car_IO_LOW; //Í£Ö¹
         M2_BIN1 = Car_IO_LOW;
-        M2_BIN2 = Car_IO_LOW; //åœæ­¢
+        M2_BIN2 = Car_IO_LOW; //Í£Ö¹
         M3_AIN1 = Car_IO_LOW;
-        M3_AIN2 = Car_IO_LOW; //åœæ­¢
+        M3_AIN2 = Car_IO_LOW; //Í£Ö¹
         M4_BIN1 = Car_IO_LOW;
-        M4_BIN2 = Car_IO_LOW; //åœæ­¢
+        M4_BIN2 = Car_IO_LOW; //Í£Ö¹
         break;
     default:
         break;
     } */
 }
+
+/**
+ * @name: Car_Struct_Init
+ * @msg: ½á¹¹ÌåµÄ³õÊ¼»¯
+ * @param {S_CAR_STATE} *car
+ * @return {*}
+ */
+void Car_Struct_Init(S_CAR_STATE *car)
+{
+    u8 i;
+    for (i = 0; i < 4; i++)
+    {
+        car->motro_state[i].distance = 0.0;
+        car->motro_state[i].encode_num = 0;
+        car->motro_state[i].max_speed = 0;
+        car->motro_state[i].speed_output_value = 0.0f;
+        car->motro_state[i].speed_output_value_finally = 0.0f;
+        car->motro_state[i].target_distance = 0.0f;
+        car->motro_state[i].total_encode_num = 0;
+    }
+    PID_Init(); // pid²ÎÊı¸´Î»
+    car->direction = stop;
+    car->pid_en = 0; // PID¼ÆËãÍêÍ£Ö¹
+}
+
+/**
+ * @name: Car_Go
+ * @msg: Ğ¡³µÒª×ßµÄ¾àÀë
+ * @param {u32} location_cm:¾àÀë
+ * @return {*}
+ */
+/**
+ * @name: Car_Go
+ * @msg: Ğ¡³µÒª×ßµÄ¾àÀë
+ * @param {u32} location_cm Ğ¡³µĞĞÊ»¾àÀë
+ * @param {S_CAR_STATE} *car Ğ¡³µ½á¹¹Ìå
+ * @param {u16} max_speed   Ğ¡³µ×î´óËÙ¶È,µ¥Î»RPM,ÓÃµÄ»¹ÊÇ½á¹¹ÌåÃ»¸Ä
+ * @return {*}
+ */
+void Car_Go(u32 location_cm, S_CAR_STATE *car, u16 max_speed)
+{
+    float car_location = 0.0;
+    Car_Struct_Init(car);
+    car_location = (location_cm / (Car_CheLunZhiJing * Car_PI)) * (Car_MOTOR_PULSE_PER_CYCLE); //¾àÀë×ª»»³ÉÂö³åÊı
+    set_pid_target(&car->motro_state[0].location, car_location);
+    set_pid_target(&car->motro_state[1].location, car_location);
+    set_pid_target(&car->motro_state[2].location, car_location);
+    set_pid_target(&car->motro_state[3].location, car_location);
+    u1_printf("go staright,distance: %d, %f\r\n", location_cm, car_location);
+    car->direction = forward;
+    // car.
+    car->motro_state[0].target_distance = location_cm;
+    car->pid_en = 1;
+}
+
+/**
+ * @name: Car_Stop
+ * @msg: Ğ¡³µÍ£Ö¹
+ * @param {S_CAR_STATE} *car
+ * @return {*}
+ */
+void Car_Stop(S_CAR_STATE *car)
+{
+    u8 i;
+    Car_Struct_Init(car);
+    for(i = 0; i < 4;i++)
+	{
+        Car_Direction(stop, i);
+	}
+    TIM_SetCompare1(TIM2, 0); //ÉèÖÃM1µÄPWM
+    TIM_SetCompare2(TIM2, 0); //ÉèÖÃM2µÄPWM
+    TIM_SetCompare3(TIM2, 0); //ÉèÖÃM3µÄPWM
+    TIM_SetCompare4(TIM2, 0); //ÉèÖÃM4µÄPWM
+    u1_printf("Í£Ö¹\r\n");
+}
 /**
  * @name: Car_Speed_PID
- * @msg: è®¡ç®—é€Ÿåº¦pid
+ * @msg: ¼ÆËãËÙ¶Èpid
  * @param {S_MOTOR_STATE} *motor
  * @return {*}
  */
@@ -185,17 +260,17 @@ float Car_Speed_PID(S_MOTOR_STATE *motor)
 {
     float actual_speed = 0.0;
     float cont_value = 0.0;
-    //å•ä½æ—¶é—´å†…çš„è„‰å†²æ•°è½¬æ¢æˆé€Ÿåº¦
-    actual_speed = ((float)motor->encode_num / Car_FREQUENCY_DOUBLE / Car_MOTOR_COIL) * (60.0 * 1000.0 / Car_PID_CYCLE); // rpm
-    // printf("actual2_speed:%f\r\n", actual_speed);
+    //µ¥Î»Ê±¼äÄÚµÄÂö³åÊı×ª»»³ÉËÙ¶È
+    actual_speed = ((float)motor->encode_num /Car_MOTOR_PULSE_PER_CYCLE) * (60.0 * 1000.0 / 50); // rpm
+    u1_printf("actual2_speed:%f\r\n", actual_speed);
     cont_value = speed_pid_realize(&motor->seppd, actual_speed);
-    // printf("con2t_value:%f\r\n", cont_value);
+    printf("con2t_value:%f\r\n", cont_value);
     return cont_value;
 }
 
 /**
  * @name: Car_Location_PID
- * @msg: è®¡ç®—ä½ç½®pid
+ * @msg: ¼ÆËãÎ»ÖÃpid
  * @param {S_MOTOR_STATE} *motor
  * @return {*}
  */
@@ -206,7 +281,7 @@ float Car_Location_PID(S_MOTOR_STATE *motor)
 
     actual_location = motor->total_encode_num;
     cont_value = location_pid_realize(&motor->location, actual_location);
-    if (cont_value > Car_MAXSPEED) //é€Ÿåº¦é™åˆ¶
+    if (cont_value > Car_MAXSPEED) //ËÙ¶ÈÏŞÖÆ
     {
         cont_value = Car_MAXSPEED;
     }
@@ -214,12 +289,13 @@ float Car_Location_PID(S_MOTOR_STATE *motor)
     {
         cont_value = -Car_MAXSPEED;
     }
+    u1_printf("cont:%f\r\n", cont_value);
     return cont_value;
 }
 
 /**
  * @name: Location_Speed_Control
- * @msg: ä½ç½®é€Ÿåº¦ç¯æ§åˆ¶
+ * @msg: Î»ÖÃËÙ¶È»·¿ØÖÆ
  * @param {S_CAR_STATE *} car
  * @return {*}
  */
@@ -230,79 +306,79 @@ void Location_Speed_Control(S_CAR_STATE *car)
     if (location_control_count >= 1)
     {
         location_control_count = 0;
-        Location_1_Outval = Car_Location_PID(&car->motro1_state);
-        Location_2_Outval = Car_Location_PID(&car->motro2_state);
-        Location_3_Outval = Car_Location_PID(&car->motro3_state);
-        Location_4_Outval = Car_Location_PID(&car->motro4_state);
+        Location_1_Outval = Car_Location_PID(&car->motro_state[0]);
+        Location_2_Outval = Car_Location_PID(&car->motro_state[1]);
+        Location_3_Outval = Car_Location_PID(&car->motro_state[2]);
+        Location_4_Outval = Car_Location_PID(&car->motro_state[3]);
         // printf("Location_1_Outval:%f, Motor_1_PulseSigma:%d\r\n", Location_1_Outval, Motor_1_PulseSigma);
         // printf("Location_2_Outval:%f, Motor_2_PulseSigma:%d\r\n", Location_2_Outval, Motor_2_PulseSigma);
-        // è®¾ç½®ç›®æ ‡å€¼
-        set_pid_target(&car->motro1_state.seppd, Location_1_Outval);
-        set_pid_target(&car->motro2_state.seppd, Location_2_Outval);
-        set_pid_target(&car->motro3_state.seppd, Location_3_Outval);
-        set_pid_target(&car->motro4_state.seppd, Location_4_Outval);
+        // ÉèÖÃÄ¿±êÖµ
+        set_pid_target(&car->motro_state[0].seppd, Location_1_Outval);
+        set_pid_target(&car->motro_state[1].seppd, Location_2_Outval);
+        set_pid_target(&car->motro_state[2].seppd, Location_3_Outval);
+        set_pid_target(&car->motro_state[3].seppd, Location_4_Outval);
     }
     location_control_count++;
-    car->motro1_state.speed_output_value = Car_Speed_PID(&car->motro1_state);
-    car->motro2_state.speed_output_value = Car_Speed_PID(&car->motro2_state);
-    car->motro3_state.speed_output_value = Car_Speed_PID(&car->motro3_state);
-    car->motro4_state.speed_output_value = Car_Speed_PID(&car->motro4_state);
+    car->motro_state[0].speed_output_value = Car_Speed_PID(&car->motro_state[0]);
+    car->motro_state[1].speed_output_value = Car_Speed_PID(&car->motro_state[1]);
+    car->motro_state[2].speed_output_value = Car_Speed_PID(&car->motro_state[2]);
+    car->motro_state[3].speed_output_value = Car_Speed_PID(&car->motro_state[3]);
 }
 
 /**
  * @name: Motor_Output
- * @msg: PWMè¾“å‡º
+ * @msg: PWMÊä³ö
  * @param {S_CAR_STATE} car
  * @return {*}
  */
 void Motor_Output(S_CAR_STATE car)
 {
-    if (car.motro1_state.speed_output_value >= 0) //æ­£è½¬
+    if (car.motro_state[0].speed_output_value_finally >= 0) //Õı×ª
     {
         Car_Direction(zhengzhuan, 1);
     }
     else
     {
         Car_Direction(fanzhuan, 1);
-        car.motro1_state.speed_output_value = -car.motro1_state.speed_output_value;
+        car.motro_state[0].speed_output_value_finally = -car.motro_state[0].speed_output_value_finally;
     }
-    car.motro1_state.speed_output_value = car.motro1_state.speed_output_value > Car_MAXPWM ? Car_MAXPWM : car.motro1_state.speed_output_value; //æ˜¯å¦è¶…å‡ºæœ€å¤§PWMé™å¹…
+    car.motro_state[0].speed_output_value_finally = car.motro_state[0].speed_output_value_finally > Car_MAXPWM ? Car_MAXPWM : car.motro_state[0].speed_output_value_finally; //ÊÇ·ñ³¬³ö×î´óPWMÏŞ·ù
 
-    if (car.motro2_state.speed_output_value >= 0) //æ­£è½¬
+    if (car.motro_state[1].speed_output_value_finally >= 0) //Õı×ª
     {
         Car_Direction(zhengzhuan, 2);
     }
     else
     {
         Car_Direction(fanzhuan, 2);
-        car.motro2_state.speed_output_value = -car.motro2_state.speed_output_value;
+        car.motro_state[1].speed_output_value_finally = -car.motro_state[1].speed_output_value_finally;
     }
-    car.motro2_state.speed_output_value = car.motro2_state.speed_output_value > Car_MAXPWM ? Car_MAXPWM : car.motro2_state.speed_output_value; //æ˜¯å¦è¶…å‡ºæœ€å¤§PWMé™å¹…
+    car.motro_state[1].speed_output_value_finally = car.motro_state[1].speed_output_value_finally > Car_MAXPWM ? Car_MAXPWM : car.motro_state[1].speed_output_value_finally; //ÊÇ·ñ³¬³ö×î´óPWMÏŞ·ù
 
-    if (car.motro3_state.speed_output_value >= 0) //æ­£è½¬
+    if (car.motro_state[2].speed_output_value_finally >= 0) //Õı×ª
     {
         Car_Direction(zhengzhuan, 3);
     }
     else
     {
         Car_Direction(fanzhuan, 3);
-        car.motro3_state.speed_output_value = -car.motro3_state.speed_output_value;
+        car.motro_state[2].speed_output_value_finally = -car.motro_state[2].speed_output_value_finally;
     }
-    car.motro3_state.speed_output_value = car.motro3_state.speed_output_value > Car_MAXPWM ? Car_MAXPWM : car.motro3_state.speed_output_value; //æ˜¯å¦è¶…å‡ºæœ€å¤§PWMé™å¹…
+    car.motro_state[2].speed_output_value_finally = car.motro_state[2].speed_output_value_finally > Car_MAXPWM ? Car_MAXPWM : car.motro_state[2].speed_output_value_finally; //ÊÇ·ñ³¬³ö×î´óPWMÏŞ·ù
 
-    if (car.motro4_state.speed_output_value >= 0) //æ­£è½¬
+    if (car.motro_state[3].speed_output_value_finally >= 0) //Õı×ª
     {
         Car_Direction(zhengzhuan, 4);
     }
     else
     {
         Car_Direction(fanzhuan, 4);
-        car.motro4_state.speed_output_value = -car.motro4_state.speed_output_value;
+        car.motro_state[3].speed_output_value_finally = -car.motro_state[3].speed_output_value_finally;
     }
-    car.motro4_state.speed_output_value = car.motro4_state.speed_output_value > Car_MAXPWM ? Car_MAXPWM : car.motro4_state.speed_output_value; //æ˜¯å¦è¶…å‡ºæœ€å¤§PWMé™å¹…
+    car.motro_state[3].speed_output_value_finally = car.motro_state[3].speed_output_value_finally > Car_MAXPWM ? Car_MAXPWM : car.motro_state[3].speed_output_value_finally; //ÊÇ·ñ³¬³ö×î´óPWMÏŞ·ù
 
-    TIM_SetCompare1(TIM2, car.motro1_state.speed_output_value); //è®¾ç½®M1çš„PWM
-    TIM_SetCompare2(TIM2, car.motro2_state.speed_output_value); //è®¾ç½®M2çš„PWM
-    TIM_SetCompare3(TIM2, car.motro3_state.speed_output_value); //è®¾ç½®M3çš„PWM
-    TIM_SetCompare4(TIM2, car.motro4_state.speed_output_value); //è®¾ç½®M4çš„PWM
+    TIM_SetCompare1(TIM2, (int)car.motro_state[0].speed_output_value_finally); //ÉèÖÃM1µÄPWM
+    TIM_SetCompare2(TIM2, (int)car.motro_state[1].speed_output_value_finally); //ÉèÖÃM2µÄPWM
+    TIM_SetCompare3(TIM2, (int)car.motro_state[2].speed_output_value_finally); //ÉèÖÃM3µÄPWM
+    TIM_SetCompare4(TIM2, (int)car.motro_state[3].speed_output_value_finally); //ÉèÖÃM4µÄPWM
 }

@@ -3,6 +3,7 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "string.h"
+#include "tb6612.h"
 
 /* FreeRTOS */
 #include "FreeRTOS.h"
@@ -54,8 +55,11 @@ void USART2_IRQHandler(void)
 
         //******************↓↓↓↓↓这里作数据处理↓↓↓↓↓******************//
 
-        DMA_USART2_Tx_Data(p, USART2_RX_LEN);
-
+        // DMA_USART2_Tx_Data(p, USART2_RX_LEN);
+        if(strstr((char*)p, "go")!=NULL)
+        {
+            Car_Go(50, &Car_1, 100);
+        }
         //******************↑↑↑↑↑这里作数据处理↑↑↑↑↑******************//
     }
 }

@@ -1,172 +1,172 @@
 /*
  * @Author: TOTHTOT
  * @Date: 2022-04-04 20:15:40
- * @LastEditTime: 2022-07-18 16:58:11
+ * @LastEditTime: 2022-07-24 14:15:23
  * @LastEditors: TOTHTOT
- * @Description: æ‰“å¼€koroFileHeaderæŸ¥çœ‹é…ç½® è¿›è¡Œè®¾ç½®: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \USERe:\Learn\stm32\å®ä¾‹\RCT6_4è½®å°è½¦\HARDWARE\PID\pid.c
+ * @Description: ´ò¿ªkoroFileHeader²é¿´ÅäÖÃ ½øĞĞÉèÖÃ: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \USERe:\Github\4WD_CAR\RCT6_4ÂÖĞ¡³µ\HARDWARE\PID\pid.c
  */
 #include "pid.h"
 #include "tb6612.h"
 
-// _pid Pid_Speed1, Car_1.motro2_state.seppd, Car_1.motro2_state.seppd, Car_1.motro2_state.seppd;
-// _pid Car_1.motro1_state.location, Car_1.motro2_state.location, Car_1.motro3_state.location, Car_1.motro4_state.location;
+// _pid Pid_Speed1, Car_1.motro_state[1].seppd, Car_1.motro_state[1].seppd, Car_1.motro_state[1].seppd;
+// _pid Car_1.motro_state[0].location, Car_1.motro_state[1].location, Car_1.motro_state[2].location, Car_1.motro_state[3].location;
 
 void PID_Init(void)
 {
     // _pid *speed_pid, _pid *location_pid
-    /* ä½ç½®ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro1_state.location.target_val = 0.0;
-    Car_1.motro1_state.location.actual_val = 0.0;
-    Car_1.motro1_state.location.err = 0.0;
-    Car_1.motro1_state.location.err_last = 0.0;
-    Car_1.motro1_state.location.integral = 0.0;
+    /* Î»ÖÃÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[0].location.target_val = 0.0;
+    Car_1.motro_state[0].location.actual_val = 0.0;
+    Car_1.motro_state[0].location.err = 0.0;
+    Car_1.motro_state[0].location.err_last = 0.0;
+    Car_1.motro_state[0].location.integral = 0.0;
 
-    Car_1.motro1_state.location.Kp = 0.24;
-    Car_1.motro1_state.location.Ki = 0.0;
-    Car_1.motro1_state.location.Kd = 0.0;
+    Car_1.motro_state[0].location.Kp = 0.24;
+    Car_1.motro_state[0].location.Ki = 0.0;
+    Car_1.motro_state[0].location.Kd = 0.0;
 
-    /* é€Ÿåº¦ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro1_state.seppd.target_val = 0.0;
-    Car_1.motro1_state.seppd.actual_val = 0.0;
-    Car_1.motro1_state.seppd.err = 0.0;
-    Car_1.motro1_state.seppd.err_last = 0.0;
-    Car_1.motro1_state.seppd.integral = 0.0;
+    /* ËÙ¶ÈÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[0].seppd.target_val = 0.0;
+    Car_1.motro_state[0].seppd.actual_val = 0.0;
+    Car_1.motro_state[0].seppd.err = 0.0;
+    Car_1.motro_state[0].seppd.err_last = 0.0;
+    Car_1.motro_state[0].seppd.integral = 0.0;
 
-    Car_1.motro1_state.seppd.Kp = 1.0;
-    Car_1.motro1_state.seppd.Ki = 0.4;
-    Car_1.motro1_state.seppd.Kd = 1.5;
+    Car_1.motro_state[0].seppd.Kp = 1.0;
+    Car_1.motro_state[0].seppd.Ki = 0.4;
+    Car_1.motro_state[0].seppd.Kd = 1.5;
 
-    /* ä½ç½®ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro2_state.location.target_val = 0.0;
-    Car_1.motro2_state.location.actual_val = 0.0;
-    Car_1.motro2_state.location.err = 0.0;
-    Car_1.motro2_state.location.err_last = 0.0;
-    Car_1.motro2_state.location.integral = 0.0;
+    /* Î»ÖÃÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[1].location.target_val = 0.0;
+    Car_1.motro_state[1].location.actual_val = 0.0;
+    Car_1.motro_state[1].location.err = 0.0;
+    Car_1.motro_state[1].location.err_last = 0.0;
+    Car_1.motro_state[1].location.integral = 0.0;
 
-    Car_1.motro2_state.location.Kp = 0.24;
-    Car_1.motro2_state.location.Ki = 0.0;
-    Car_1.motro2_state.location.Kd = 0.0;
+    Car_1.motro_state[1].location.Kp = 0.24;
+    Car_1.motro_state[1].location.Ki = 0.0;
+    Car_1.motro_state[1].location.Kd = 0.0;
 
-    /* é€Ÿåº¦ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro2_state.seppd.target_val = 0.0;
-    Car_1.motro2_state.seppd.actual_val = 0.0;
-    Car_1.motro2_state.seppd.err = 0.0;
-    Car_1.motro2_state.seppd.err_last = 0.0;
-    Car_1.motro2_state.seppd.integral = 0.0;
+    /* ËÙ¶ÈÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[1].seppd.target_val = 0.0;
+    Car_1.motro_state[1].seppd.actual_val = 0.0;
+    Car_1.motro_state[1].seppd.err = 0.0;
+    Car_1.motro_state[1].seppd.err_last = 0.0;
+    Car_1.motro_state[1].seppd.integral = 0.0;
 
-    Car_1.motro2_state.seppd.Kp = 1.0;
-    Car_1.motro2_state.seppd.Ki = 0.4;
-    Car_1.motro2_state.seppd.Kd = 1.5;
+    Car_1.motro_state[1].seppd.Kp = 1.0;
+    Car_1.motro_state[1].seppd.Ki = 0.4;
+    Car_1.motro_state[1].seppd.Kd = 1.5;
     
-    /* ä½ç½®ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro3_state.location.target_val = 0.0;
-    Car_1.motro3_state.location.actual_val = 0.0;
-    Car_1.motro3_state.location.err = 0.0;
-    Car_1.motro3_state.location.err_last = 0.0;
-    Car_1.motro3_state.location.integral = 0.0;
+    /* Î»ÖÃÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[2].location.target_val = 0.0;
+    Car_1.motro_state[2].location.actual_val = 0.0;
+    Car_1.motro_state[2].location.err = 0.0;
+    Car_1.motro_state[2].location.err_last = 0.0;
+    Car_1.motro_state[2].location.integral = 0.0;
 
-    Car_1.motro3_state.location.Kp = 0.24;
-    Car_1.motro3_state.location.Ki = 0.0;
-    Car_1.motro3_state.location.Kd = 0.0;
+    Car_1.motro_state[2].location.Kp = 0.24;
+    Car_1.motro_state[2].location.Ki = 0.0;
+    Car_1.motro_state[2].location.Kd = 0.0;
 
-    /* é€Ÿåº¦ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro3_state.seppd.target_val = 0.0;
-    Car_1.motro3_state.seppd.actual_val = 0.0;
-    Car_1.motro3_state.seppd.err = 0.0;
-    Car_1.motro3_state.seppd.err_last = 0.0;
-    Car_1.motro3_state.seppd.integral = 0.0;
+    /* ËÙ¶ÈÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[2].seppd.target_val = 0.0;
+    Car_1.motro_state[2].seppd.actual_val = 0.0;
+    Car_1.motro_state[2].seppd.err = 0.0;
+    Car_1.motro_state[2].seppd.err_last = 0.0;
+    Car_1.motro_state[2].seppd.integral = 0.0;
 
-    Car_1.motro3_state.seppd.Kp = 1.0;
-    Car_1.motro3_state.seppd.Ki = 0.4;
-    Car_1.motro3_state.seppd.Kd = 1.5;
+    Car_1.motro_state[2].seppd.Kp = 1.0;
+    Car_1.motro_state[2].seppd.Ki = 0.4;
+    Car_1.motro_state[2].seppd.Kd = 1.5;
 
-    /* ä½ç½®ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro4_state.location.target_val = 0.0;
-    Car_1.motro4_state.location.actual_val = 0.0;
-    Car_1.motro4_state.location.err = 0.0;
-    Car_1.motro4_state.location.err_last = 0.0;
-    Car_1.motro4_state.location.integral = 0.0;
+    /* Î»ÖÃÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[3].location.target_val = 0.0;
+    Car_1.motro_state[3].location.actual_val = 0.0;
+    Car_1.motro_state[3].location.err = 0.0;
+    Car_1.motro_state[3].location.err_last = 0.0;
+    Car_1.motro_state[3].location.integral = 0.0;
 
-    Car_1.motro4_state.location.Kp = 0.24;
-    Car_1.motro4_state.location.Ki = 0.0;
-    Car_1.motro4_state.location.Kd = 0.0;
+    Car_1.motro_state[3].location.Kp = 0.24;
+    Car_1.motro_state[3].location.Ki = 0.0;
+    Car_1.motro_state[3].location.Kd = 0.0;
 
-    /* é€Ÿåº¦ç›¸å…³åˆå§‹åŒ–å‚æ•° */
-    Car_1.motro4_state.seppd.target_val = 0.0;
-    Car_1.motro4_state.seppd.actual_val = 0.0;
-    Car_1.motro4_state.seppd.err = 0.0;
-    Car_1.motro4_state.seppd.err_last = 0.0;
-    Car_1.motro4_state.seppd.integral = 0.0;
+    /* ËÙ¶ÈÏà¹Ø³õÊ¼»¯²ÎÊı */
+    Car_1.motro_state[3].seppd.target_val = 0.0;
+    Car_1.motro_state[3].seppd.actual_val = 0.0;
+    Car_1.motro_state[3].seppd.err = 0.0;
+    Car_1.motro_state[3].seppd.err_last = 0.0;
+    Car_1.motro_state[3].seppd.integral = 0.0;
 
-    Car_1.motro4_state.seppd.Kp = 1.0;
-    Car_1.motro4_state.seppd.Ki = 0.4;
-    Car_1.motro4_state.seppd.Kd = 1.5;
+    Car_1.motro_state[3].seppd.Kp = 1.0;
+    Car_1.motro_state[3].seppd.Ki = 0.4;
+    Car_1.motro_state[3].seppd.Kd = 1.5;
 }
 
 void set_pid_target(_pid *pid, float temp_val)
 {
-  pid->target_val = temp_val;    // è®¾ç½®å½“å‰çš„ç›®æ ‡å€¼
+  pid->target_val = temp_val;    // ÉèÖÃµ±Ç°µÄÄ¿±êÖµ
 }
 
 float speed_pid_realize(_pid *pid, float actual_val)
 {
-    /*è®¡ç®—ç›®æ ‡å€¼ä¸å®é™…å€¼çš„è¯¯å·®*/
+    /*¼ÆËãÄ¿±êÖµÓëÊµ¼ÊÖµµÄÎó²î*/
     pid->err = pid->target_val - actual_val;
 
-    if ((pid->err < 0.5f) && (pid->err > -0.5f)) //å·®1è¿™ä¹ˆå¤šå¯ä»¥å—ï¼Ÿè¿è¡Œ1åˆ†é’Ÿï¼Œä½ç½®å·®ä¸º1ä¸ªè½®å­çš„å‘¨é•¿
+    if ((pid->err < 0.5f) && (pid->err > -0.5f)) //²î1ÕâÃ´¶à¿ÉÒÔÂğ£¿ÔËĞĞ1·ÖÖÓ£¬Î»ÖÃ²îÎª1¸öÂÖ×ÓµÄÖÜ³¤
     {
         pid->err = 0.0f;
     }
 
-    pid->integral += pid->err; // è¯¯å·®ç´¯ç§¯
+    pid->integral += pid->err; // Îó²îÀÛ»ı
 
-    /*ç§¯åˆ†é™å¹…*/
-    if (pid->integral >= 5000)
+    /*»ı·ÖÏŞ·ù*/
+    if (pid->integral >= 3000)
     {
-        pid->integral = 5000;
+        pid->integral = 3000;
     }
-    else if (pid->integral < -5000)
+    else if (pid->integral < -3000)
     {
-        pid->integral = -5000;
+        pid->integral = -3000;
     }
 
-    /*PIDç®—æ³•å®ç°*/
+    /*PIDËã·¨ÊµÏÖ*/
     pid->actual_val = pid->Kp * pid->err + pid->Ki * pid->integral + pid->Kd * (pid->err - pid->err_last);
 
-    /*è¯¯å·®ä¼ é€’*/
+    /*Îó²î´«µİ*/
     pid->err_last = pid->err;
 
-    /*è¿”å›å½“å‰å®é™…å€¼*/
+    /*·µ»Øµ±Ç°Êµ¼ÊÖµ*/
     // printf("                        speed_pid_target:%f, speed_pid_actual:%f\r\n", pid->target_val, pid->actual_val);
     return pid->actual_val;
 }
 
 
-float location_pid_realize(_pid *pid, float actual_val)  //ä½ç½®ç¯å…‰ä¸ªKpå¥½åƒä¹Ÿå¯ä»¥
+float location_pid_realize(_pid *pid, float actual_val)  //Î»ÖÃ»·¹â¸öKpºÃÏñÒ²¿ÉÒÔ
 {
-		/*è®¡ç®—ç›®æ ‡å€¼ä¸å®é™…å€¼çš„è¯¯å·®*/
+		/*¼ÆËãÄ¿±êÖµÓëÊµ¼ÊÖµµÄÎó²î*/
     pid->err=pid->target_val-actual_val;
   
-//    /* è®¾å®šé—­ç¯æ­»åŒº */   //å¤–ç¯æ­»åŒºå¯ä»¥ä¸è¦ 
+//    /* Éè¶¨±Õ»·ËÀÇø */   //Íâ»·ËÀÇø¿ÉÒÔ²»Òª 
 //    if((pid->err >= -0.1) && (pid->err <= 0.1)) 
 //    {
 //      pid->err = 0;
 //      pid->integral = 0;
 //    }
     
-    pid->integral += pid->err;    // è¯¯å·®ç´¯ç§¯
+    pid->integral += pid->err;    // Îó²îÀÛ»ı
 
-		/*PIDç®—æ³•å®ç°*/
+		/*PIDËã·¨ÊµÏÖ*/
     pid->actual_val = pid->Kp*pid->err
 		                  +pid->Ki*pid->integral
 		                  +pid->Kd*(pid->err-pid->err_last);
     // printf("                        pid_target:%f, pid_actual:%f\r\n", pid->target_val, pid->actual_val);
   
-		/*è¯¯å·®ä¼ é€’*/
+		/*Îó²î´«µİ*/
     pid->err_last=pid->err;
     
-		/*è¿”å›å½“å‰å®é™…å€¼*/
+		/*·µ»Øµ±Ç°Êµ¼ÊÖµ*/
     return pid->actual_val;
 }
 

@@ -2,16 +2,16 @@
  * @Description: tb6612.HARDWARE
  * @Author: TOTHTOT
  * @Date: 2022-07-18 09:34:00
- * @LastEditTime: 2022-07-21 13:52:38
+ * @LastEditTime: 2022-07-24 15:20:36
  * @LastEditors: TOTHTOT
- * @FilePath: \USERe:\Learn\stm32\å®ä¾‹\RCT6_4è½®å°è½¦\HARDWARE\TB6612\tb6612.h
+ * @FilePath: \USERe:\Github\4WD_CAR\RCT6_4ÂÖĞ¡³µ\HARDWARE\TB6612\tb6612.h
  */
 #ifndef __TB6612_H
 #define __TB6612_H
 #include "sys.h"
 #include "pid.h"
 
-//å°è½¦æ–¹å‘è¾“å‡ºIOå£å®å®šä¹‰
+//Ğ¡³µ·½ÏòÊä³öIO¿Úºê¶¨Òå
 #define Car_IO_HIGH 1
 #define Car_IO_LOW 0
 #define M1_AIN1 PCout(0)
@@ -26,20 +26,20 @@
 #define M4_BIN1 PBout(0)
 #define M4_BIN2 PBout(1)
 
-// å°è½¦ç›¸å…³é…ç½®å®å®šä¹‰
-#define Car_CheChang 20                                                      // å°è½¦é•¿åº¦å•ä½CM
-#define Car_CheLunZhiJing 6.5                                                //å°è½¦è½¦è½®ç›´å¾„å•ä½CM
-#define Car_CheKuan 15                                                       //å°è½¦è½¦å®½å•ä½CM
-#define Car_MAXPWM 3600 * 0.8                                                //å®šä¹‰è¾“å‡ºæœ€å¤§PWMçš„ç™¾åˆ†ä¹‹å…«å
-#define Car_PI 3.142                                                         //å®šä¹‰åœ†å‘¨ç‡
-#define Car_MAXSPEED 100                                                     //å®šä¹‰æœ€å¤§è½¬é€ŸRPM
-#define Car_FREQUENCY_DOUBLE 4                                               //å€é¢‘
-#define Car_MOTOR_REDUCTION_RATIO 30                                         //å‡é€Ÿæ¯”
-#define Car_MOTOR_LINE_NUM 13                                                //çº¿åœˆçº¿æ•°
-#define Car_MOTOR_COIL Car_MOTOR_REDUCTION_RATIO *Car_MOTOR_LINE_NUM         //çº¿åœˆæ•°
-#define Car_MOTOR_PULSE_PER_CYCLE Ca_MOTORr_FREQUENCY_DOUBLE *Car_MOTOR_COIL //æ¯è½¬ä¸€åœˆäº§ç”Ÿçš„è„‰å†²æ•° 4*390=1560 13*30=390
-#define Car_PID_CYCLE 20                                                     // PIDæ¯æ¬¡æ‰§è¡Œçš„æ—¶é—´é—´éš”
-// å°è½¦æ–¹å‘æšä¸¾
+// Ğ¡³µÏà¹ØÅäÖÃºê¶¨Òå
+#define Car_CheChang 20                                                // Ğ¡³µ³¤¶Èµ¥Î»CM
+#define Car_CheLunZhiJing 4.8                                          //Ğ¡³µ³µÂÖÖ±¾¶µ¥Î»CM
+#define Car_CheKuan 15                                                 //Ğ¡³µ³µ¿íµ¥Î»CM
+#define Car_MAXPWM 3000 * 0.8                                          //¶¨ÒåÊä³ö×î´óPWMµÄ°Ù·ÖÖ®°ËÊ®
+#define Car_PI 3.142                                                   //¶¨ÒåÔ²ÖÜÂÊ
+#define Car_MAXSPEED 120                                               //¶¨Òå×î´ó×ªËÙRPM
+#define Car_FREQUENCY_DOUBLE 4.0                                         //±¶Æµ
+#define Car_MOTOR_REDUCTION_RATIO 20                                   //¼õËÙ±È
+#define Car_MOTOR_LINE_NUM 13                                          //ÏßÈ¦ÏßÊı
+#define Car_MOTOR_COIL (Car_MOTOR_REDUCTION_RATIO *Car_MOTOR_LINE_NUM)   //×ªÒ»È¦Êä³öÂö³å
+#define Car_MOTOR_PULSE_PER_CYCLE (Car_FREQUENCY_DOUBLE *Car_MOTOR_COIL) //Ã¿×ªÒ»È¦²úÉúµÄÂö³åÊı 4*260 13*20=260
+#define Car_PID_CYCLE 50                                               // PIDÃ¿´ÎÖ´ĞĞµÄÊ±¼ä¼ä¸ô
+// Ğ¡³µ·½ÏòÃ¶¾Ù
 typedef enum
 {
     zhengzhuan,
@@ -50,32 +50,38 @@ typedef enum
     turn_left,
     stop
 } E_CAR_DIRECTION;
-// ç”µæœºçŠ¶æ€ç»“æ„ä½“
+// µç»ú×´Ì¬½á¹¹Ìå
 typedef struct
 {
-    int encode_num;       //è„‰å†²æ•°
-    float speed_time;     //å®æ—¶é€Ÿåº¦
-    float distance;       //è·ç¦»
-    int total_encode_num; //æ€»è„‰å†²æ•°
-    float speed_output_value;   //è¾“å‡ºPWMå€¼
-    _pid seppd;           //é€Ÿåº¦ç¯
-    _pid location;        //ä½ç½®ç¯
+    int encode_num;                   //Âö³åÊı
+    float max_speed;                  //×î´óËÙ¶È
+    float distance;                   //ÒÔ¼°×ß¹ıµÄ¾àÀë
+    float target_distance;            //Ä¿±ê¾àÀë,ÔÚÉè¶¨¾àÀëÊ±ÉèÖÃ
+    int total_encode_num;             //×ÜÂö³åÊı
+    float speed_output_value;         //Êä³öPWMÖµ
+    float speed_output_value_finally; //¾­¹ıÑ°¼£×îÖÕÊä³öµÄPWMÖµ
+    _pid seppd;                       //ËÙ¶È»·
+    _pid location;                    //Î»ÖÃ»·
 } S_MOTOR_STATE;
 
-// å°è½¦çŠ¶æ€ç»“æ„ä½“
+// Ğ¡³µ×´Ì¬½á¹¹Ìå
 typedef struct
 {
     E_CAR_DIRECTION direction;
-    S_MOTOR_STATE motro1_state;
-    S_MOTOR_STATE motro2_state;
-    S_MOTOR_STATE motro3_state;
-    S_MOTOR_STATE motro4_state;
-    u16 car_battery_voltage;      //å°è½¦ç”µæ± ç”µå‹åŸå§‹ç”µå‹å€¼æœªæ¢ç®—
+    S_MOTOR_STATE motro_state[4];
+    u16 car_battery_voltage; //Ğ¡³µµç³ØµçÑ¹Ô­Ê¼µçÑ¹ÖµÎ´»»Ëã
+    char pid_en;             // pid¼ÆËãÊ¹ÄÜ,ÔÚ´ïµ½Ä¿±êºóÍ£Ö¹¼ÆËãPID,Ò²¿ÉÒÔ¹ÒÆğÈÎÎñÀ´ÊµÏÖÍ£Ö¹¼ÆËãPID
 } S_CAR_STATE;
 
 extern S_CAR_STATE Car_1;
 
 void TB6612_Init(void);
 void Car_Direction(E_CAR_DIRECTION direction, u8 motor);
+void Location_Speed_Control(S_CAR_STATE *car);
+void Motor_Output(S_CAR_STATE car);
+
+void Car_Struct_Init(S_CAR_STATE *car);
+void Car_Go(u32 location_cm, S_CAR_STATE *car, u16 max_speed);
+void Car_Stop(S_CAR_STATE *car);
 
 #endif /* __TB6612_H */
