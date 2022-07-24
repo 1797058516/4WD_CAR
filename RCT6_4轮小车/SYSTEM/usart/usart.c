@@ -282,3 +282,4 @@ void u1_printf(char* format,...)
 	DMA_USART1_Tx_Data(USART1_TX_BUF,strlen((const char*)USART1_TX_BUF));
 
 }
+
