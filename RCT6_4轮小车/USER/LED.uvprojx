@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\HARDWARE\LED;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\USART;..\HARDWARE\KEY;..\HARDWARE\TB6612;..\HARDWARE\PID;..\HARDWARE\ADC;..\HARDWARE\BEEP;..\HARDWARE\LCD;..\SYSTEM\usart;..\HARDWARE\MPU6050;..\HARDWARE\MPU6050\eMPL</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\HARDWARE\LED;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\USART;..\HARDWARE\KEY;..\HARDWARE\TB6612;..\HARDWARE\PID;..\HARDWARE\ADC;..\HARDWARE\BEEP;..\HARDWARE\LCD;..\SYSTEM\usart;..\HARDWARE\MPU6050;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\CRC16</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -483,6 +483,11 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\MPU6050\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
             </File>
+            <File>
+              <FileName>crc16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\CRC16\crc16.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -567,6 +572,11 @@
               <FileName>stm32f10x_dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\STM32F10x_FWLib\src\stm32f10x_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32F10x_FWLib\src\stm32f10x_crc.c</FilePath>
             </File>
           </Files>
         </Group>
