@@ -1,19 +1,8 @@
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'E:\Keil Programma\ARM\ARMCC\Bin'
 Build target 'Target 1'
-compiling usart2.c...
-..\SYSTEM\usart\usart.h(41): error:  #256: invalid redeclaration of type name "FIFO_DMA_H"  (declared at line 37 of "..\HARDWARE\USART\usart2.h")
-  }FIFO_DMA_H;	
-..\HARDWARE\USART\usart2.c(28): error:  #147: declaration is incompatible with "FIFO_DMA_H Usart2_Handle"  (declared at line 38 of "..\HARDWARE\USART\usart2.h")
-  FIFO_DMA_H Usart2_Handle;
-..\HARDWARE\USART\usart2.c(224): warning:  #1-D: last line of file ends without a newline
-  }
-..\HARDWARE\USART\usart2.c: 1 warning, 2 errors
-compiling main.c...
-..\HARDWARE\USART\usart2.h(37): error:  #256: invalid redeclaration of type name "FIFO_DMA_H"  (declared at line 41 of "..\SYSTEM\usart\usart.h")
-  }FIFO_DMA_H;
-..\HARDWARE\BEEP\music.h(80): warning:  #1-D: last line of file ends without a newline
-  					  								  					  
-main.c: 1 warning, 1 error
-"..\OBJ\LED.axf" - 3 Error(s), 2 Warning(s).
-Target not created.
-Build Time Elapsed:  00:00:02
+compiling tb6612.c...
+linking...
+Program Size: Code=53680 RO-data=6160 RW-data=1464 ZI-data=26080  
+FromELF: creating hex file...
+"..\OBJ\LED.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:04
