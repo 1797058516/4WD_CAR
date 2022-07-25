@@ -12,6 +12,7 @@
 #include "oled.h"
 
 FIFO2_DMA_H Usart3_Handle;
+S_CAMERA_H K210_XY_Data;
 
 void USART3_IRQHandler(void)
 {
@@ -39,9 +40,14 @@ void USART3_IRQHandler(void)
         DMA_Cmd(DMA1_Channel3, ENABLE);             //使能USART2 TX DMA1 所指示的通道
 
         //******************↓↓↓↓↓这里作数据处理↓↓↓↓↓******************//
-
-        DMA_USART3_Tx_Data(p, USART3_RX_LEN);
-
+        // 01 2c 31 38 32 2c 32 39 2c 0d 0a
+        // 如果包含帧头的话
+        if(p[0] == 0x01)
+        {
+            Get_Data_From_Buf(p, 2, ",", &K210_XY_Data);
+            u1_printf("x:%d y:%d, \r\n", K210_XY_Data.x, K210_XY_Data.y);
+        }   
+        // DMA_USART3_Tx_Data(p, USART3_RX_LEN);
         //******************↑↑↑↑↑这里作数据处理↑↑↑↑↑******************//
     }
     USART_ClearITPendingBit(USART3, USART_IT_RXNE);
@@ -94,9 +100,9 @@ void usart3_init(u32 bound)
     //设置中断优先级
     NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 14; //抢占优先级7
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;        //子优先级
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;           // IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);                           //根据指定的参数初始化VIC寄存器
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;         //子优先级
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;            // IRQ通道使能
+    NVIC_Init(&NVIC_InitStructure);                            //根据指定的参数初始化VIC寄存器
 
     Usart3_DMA_Init();
 }
@@ -202,9 +208,9 @@ unsigned char u3_get_byte(unsigned char *GetData)
 void DMA_USART3_Tx_Data(u8 *buffer, u32 size)
 {
     while (Usart3_Handle.USARTx_TX_FLAG)
-        {
-            printf("11\r\n");
-        };                                   //等待上一次发送完成（USART2_TX_FLAG为1即还在发送数据）
+    {
+        printf("11\r\n");
+    };                                      //等待上一次发送完成（USART2_TX_FLAG为1即还在发送数据）
     Usart3_Handle.USARTx_TX_FLAG = 1;       // USART2发送标志（启动发送）
     DMA1_Channel2->CMAR = (uint32_t)buffer; //设置要发送的数据地址
     DMA1_Channel2->CNDTR = size;            //设置要发送的字节数目
@@ -222,3 +228,55 @@ void DMA1_Channel2_IRQHandler(void)
         Usart3_Handle.USARTx_TX_FLAG = 0;       // USART3发送标志(关闭)
     }
 }
+
+/**
+ * @name: Get_Data_From_Buf
+ * @msg: 从缓存中解析数据,解析一个数据最大为6位数
+ * @param {u8} *buf 要解析的字符串
+ * @param {u8} times 解析次数
+ * @param {u8} key_word 解析关键字
+ * @param {S_CAMERA_H} *camera 存放解析完成的数据的结构体
+ * @return {*}
+ */
+void Get_Data_From_Buf(u8 *buf, u8 times, u8 *key_word, S_CAMERA_H *camera)
+{
+    u8 *temp_p;     //第一个 "key_word"的位置
+    u8 *temp_pp;    //第二个 "key_word"的位置
+    u8 temp[6];     //解析出来的字符串
+    u8 i;
+    for (i = 0; i < times; i++)
+    { 
+        // u1_printf("i:%d\r\n", i);
+        // 01 2c 31 38 32 2c 32 39 2c 0d 0a
+        if((temp_p = (u8 *)strstr(( char*)buf, ( char*)key_word))!=NULL) //寻找第一个 "key_word"
+        {
+            // u1_printf("11\r\n");
+            temp_p++;
+            if((temp_pp = (u8 *)strstr(( char*)temp_p, ( char*)key_word))!= NULL)//寻找第二个 "key_word",如果有的话
+            {
+                // u1_printf("22\r\n");
+                memcpy(temp, temp_p, temp_pp- temp_p);
+                if(i == 0)
+                    camera->x = atoi(( char*)temp);         //字符串转为整型
+                else if(i == 1)
+                    camera->y = atoi(( char*)temp);         //字符串转整型
+                else
+                    u1_printf("没有定义第三个参数Get_Data_From_Buf\r\n");
+                // u1_printf("1:temp:%s, x:%d, y:%d\r\ntemp_p:%s, temp_pp:%s\r\n", temp, camera->x, camera->y, temp_p, temp_pp);   
+                buf = temp_pp;
+                // u1_printf("2:temp:%s, x:%d, y:%d\r\ntemp_p:%s, temp_pp:%s\r\n", temp, camera->x, camera->y, temp_p, temp_pp);   
+                memset(temp, '\0', sizeof(temp));
+            }
+            else    //数据格式正确是不会执行到这
+            {
+                u1_printf("数据格式错误\r\n");
+                
+            }
+        }
+        else    //buf中没有关键字
+        {
+            u1_printf("cannot find key_word!!!\r\n");
+        }
+    }
+}
+

@@ -57,7 +57,7 @@ int main(void)
     // USARTx_DMA_Config();														//配置使用串口1DMA模式
     USART1_TX_DMA_Config();
     USART2_Init(460800); //串口2初始化,和蓝牙通信使用模块支持的最大波特率
-    usart3_init(115200); //串口3初始化
+    usart3_init(115200); //串口3初始化,和K210通信
     usart5_init(115200); //串口5初始化
     LED_Init();          //初始化LED
     OLED_Init();         // OLED初始化
@@ -192,6 +192,7 @@ void start_task(void *pvParameters)
  */
 void led0_task(void *pvParameters)
 {
+    u8 data[] = {0x01, 0x03, 0x00, 0x10, 0x00, 0x01};
     while (1)
     {
         LED0 = ~LED0;
@@ -210,6 +211,7 @@ void led0_task(void *pvParameters)
         // u3_printf("led task");
         // u1_printf("ackdj:%d\r\n", 22);
 
+        // u1_printf("strlen:%d, sizeof:%d, crc16:%x\r\n", strlen(data), sizeof(data), crc16tablefast(data, 6));
         delay_ms(500);
     }
 }
@@ -258,9 +260,9 @@ void pid_task(void *pvParameters)
             Read_Encode_Num(5);
             u1_printf("num3:%d  ", Car_1.motro_state[2].encode_num);
             Read_Encode_Num(8);
-            u1_printf("num4:%d\r\n", Car_1.motro_state[3].encode_num);                                                 //获取编码器的计数值
-            Car_1.motro_state[0].distance = ((Car_1.motro_state[0].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing);                          //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
-            Car_1.motro_state[1].distance = ((Car_1.motro_state[1].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE )* Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
+            u1_printf("num4:%d\r\n", Car_1.motro_state[3].encode_num);                                                                          //获取编码器的计数值
+            Car_1.motro_state[0].distance = ((Car_1.motro_state[0].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
+            Car_1.motro_state[1].distance = ((Car_1.motro_state[1].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
             Car_1.motro_state[2].distance = ((Car_1.motro_state[2].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
             Car_1.motro_state[3].distance = ((Car_1.motro_state[3].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
 

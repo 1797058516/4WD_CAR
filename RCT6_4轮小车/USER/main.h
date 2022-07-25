@@ -2,7 +2,7 @@
  * @Description: main.h
  * @Author: TOTHTOT
  * @Date: 2022-07-14 16:40:37
- * @LastEditTime: 2022-07-24 12:23:35
+ * @LastEditTime: 2022-07-25 10:21:19
  * @LastEditors: TOTHTOT
  * @FilePath: \USER\main.h
  */
@@ -36,6 +36,8 @@
 #include "inv_mpu.h"
 #include "inv_mpu_dmp_motion_driver.h"
 #include "bsp_usart_dma.h"
+#include "crc16.h"
+
 /* 小车测试宏控制 */
 #define TEST_ENCODE 1   //编码器测试
 #define USART2_TEST 0   //串口2测试控制
