@@ -2,7 +2,7 @@
  * @Description: main.h
  * @Author: TOTHTOT
  * @Date: 2022-07-14 16:40:37
- * @LastEditTime: 2022-07-23 14:55:39
+ * @LastEditTime: 2022-07-25 10:21:19
  * @LastEditors: TOTHTOT
  * @FilePath: \USER\main.h
  */
@@ -36,14 +36,16 @@
 #include "inv_mpu.h"
 #include "inv_mpu_dmp_motion_driver.h"
 #include "bsp_usart_dma.h"
+#include "crc16.h"
+
 /* 小车测试宏控制 */
-#define TEST_ENCODE 0   //编码器测试
+#define TEST_ENCODE 1   //编码器测试
 #define USART2_TEST 0   //串口2测试控制
 
 //任务优先级
 #define START_TASK_PRIO 1
 //任务堆栈大小
-#define START_STK_SIZE 128
+#define START_STK_SIZE 188
 //任务句柄
 TaskHandle_t StartTask_Handler;
 //任务函数
@@ -52,7 +54,7 @@ void start_task(void *pvParameters);
 //任务优先级
 #define LED0_TASK_PRIO 2
 //任务堆栈大小
-#define LED0_STK_SIZE 50
+#define LED0_STK_SIZE 150
 //任务句柄
 TaskHandle_t LED0Task_Handler;
 //任务函数
@@ -70,7 +72,7 @@ void oled_task(void *pvParameters);
 //任务优先级
 #define PID_TASK_PRIO 20
 //任务堆栈大小
-#define PID_STK_SIZE 260
+#define PID_STK_SIZE 360
 //任务句柄
 TaskHandle_t PIDTask_Handler;
 //任务函数

@@ -56,9 +56,9 @@ int main(void)
     uart_init(921600);                              //初始化串口
     // USARTx_DMA_Config();														//配置使用串口1DMA模式
     USART1_TX_DMA_Config();
-    USART2_Init(115200); //串口2初始化
-    usart3_init(115200); //串口3初始化
-    usart5_init(115200); //串口5初始化 */
+    USART2_Init(460800); //串口2初始化,和蓝牙通信使用模块支持的最大波特率
+    usart3_init(115200); //串口3初始化,和K210通信
+    usart5_init(115200); //串口5初始化
     LED_Init();          //初始化LED
     OLED_Init();         // OLED初始化
     KEY_Init();          //按键初始化
@@ -67,7 +67,7 @@ int main(void)
     ADC4_Init();         // ADC初始化
     Beep_Init();         // Beep初始化
     MPU_Init();          // MPU初始化
-   
+
     Timer2_PWM_Init(3600 - 1, 0);  //初始化定时器2输出4路20KHz的pwm
     Timer3_Encoder_Init(65535, 0); //初始化定时器为编码器模式
     Timer4_Encoder_Init(65535, 0); //初始化定时器为编码器模式
@@ -75,15 +75,15 @@ int main(void)
     Timer8_Encoder_Init(65535, 0); //初始化定时器为编码器模式
 
     //设置占空比
-    TIM_SetCompare1(TIM2, 0);
-    TIM_SetCompare2(TIM2, 0);
-    TIM_SetCompare3(TIM2, 0);
-    TIM_SetCompare4(TIM2, 0);
-    Car_Direction(stop, 1);
-    Car_Direction(stop, 2);
-    Car_Direction(stop, 3);
-    Car_Direction(stop, 4);
-    LCD_ShowChar(0, 0, 'A', 1);
+    /*    TIM_SetCompare1(TIM2, 1000);
+       TIM_SetCompare2(TIM2, 1000);
+       TIM_SetCompare3(TIM2, 1000);
+       TIM_SetCompare4(TIM2, 1000);
+       Car_Direction(zhengzhuan, 1);
+       Car_Direction(zhengzhuan, 2);
+       Car_Direction(zhengzhuan, 3);
+       Car_Direction(zhengzhuan, 4);
+       LCD_ShowChar(0, 0, 'A', 1); */
     // LCD初始化必须放在最后!!!!!
     // Lcd_Init();
     LCD_Clear(WHITE); //清屏
@@ -165,11 +165,11 @@ void start_task(void *pvParameters)
     Key_EventGroupHandle = xEventGroupCreate();
     if (Key_EventGroupHandle == NULL)
         printf("Couldn't create Key_EventGroupHandle\r\n");
-/*     OLED_Clear();
-    OLED_ShowString(0, 0, "init success!", 16);
-    delay_xms(300);
-    OLED_Clear();
-    main_page(); */
+    /*     OLED_Clear();
+        OLED_ShowString(0, 0, "init success!", 16);
+        delay_xms(300);
+        OLED_Clear();
+        main_page(); */
     Boot_prompt_tone();
     /* 避免应MPU6050自己的中断而打断初始化,且在信号量没有创建完成时而释放造成的错误 */
     err = mpu_dmp_init();
@@ -179,6 +179,7 @@ void start_task(void *pvParameters)
         printf("初始化dmp error:%d\r\n", err);
     }
     MPU6050_INT_Init();
+    // Car_Go(50, &Car_1);
     vTaskDelete(StartTask_Handler); //删除开始任务
     taskEXIT_CRITICAL();            //退出临界区
 }
@@ -191,19 +192,18 @@ void start_task(void *pvParameters)
  */
 void led0_task(void *pvParameters)
 {
+    u8 data[] = {0x01, 0x03, 0x00, 0x10, 0x00, 0x01};
     while (1)
     {
         LED0 = ~LED0;
-#if TEST_ENCODE
-        Read_Encode_Num(3);
-        printf("num1:%d  ", Car_1.motro1_state.encode_num);
-        Read_Encode_Num(4);
-        printf("num2:%d  ", Car_1.motro2_state.encode_num);
-        Read_Encode_Num(5);
-        printf("num3:%d  ", Car_1.motro3_state.encode_num);
-        Read_Encode_Num(8);
-        printf("num4:%d\r\n", Car_1.motro4_state.encode_num);
-#endif
+        /*    Read_Encode_Num(3);
+           u1_printf("num1:%d  ", Car_1.motro_state[0].encode_num);
+           Read_Encode_Num(4);
+           u1_printf("num2:%d  ", Car_1.motro_state[1].encode_num);
+           Read_Encode_Num(5);
+           u1_printf("num3:%d  ", Car_1.motro_state[2].encode_num);
+           Read_Encode_Num(8);
+           u1_printf("num4:%d\r\n", Car_1.motro_state[3].encode_num); */
         // printf("led task\r\n");
         // sound1();
         /*  temp =(float) (ADC_MAX_VOLTAGE/4096)*ADC_Value;
@@ -211,6 +211,7 @@ void led0_task(void *pvParameters)
         // u3_printf("led task");
         // u1_printf("ackdj:%d\r\n", 22);
 
+        // u1_printf("strlen:%d, sizeof:%d, crc16:%x\r\n", strlen(data), sizeof(data), crc16tablefast(data, 6));
         delay_ms(500);
     }
 }
@@ -243,11 +244,63 @@ void oled_task(void *pvParameters)
  */
 void pid_task(void *pvParameters)
 {
+    short Motor_Straight_Control_Num = 0; //用来处理巡线
+    u8 stop_count = 0;                    // 小车停止计数值
+    u8 stop_count_target = 10;            //小车停止计数目标值,随情况而定
     while (1)
     {
-        // taskENTER_CRITICAL(); //进入临界区
+        if (Car_1.pid_en == 1)
+        {
+            u1_printf("pid task\r\n");
+            // taskENTER_CRITICAL(); //进入临界区
+            Read_Encode_Num(3);
+            u1_printf("num1:%d  ", Car_1.motro_state[0].encode_num);
+            Read_Encode_Num(4);
+            u1_printf("num2:%d  ", Car_1.motro_state[1].encode_num);
+            Read_Encode_Num(5);
+            u1_printf("num3:%d  ", Car_1.motro_state[2].encode_num);
+            Read_Encode_Num(8);
+            u1_printf("num4:%d\r\n", Car_1.motro_state[3].encode_num);                                                                          //获取编码器的计数值
+            Car_1.motro_state[0].distance = ((Car_1.motro_state[0].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
+            Car_1.motro_state[1].distance = ((Car_1.motro_state[1].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
+            Car_1.motro_state[2].distance = ((Car_1.motro_state[2].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
+            Car_1.motro_state[3].distance = ((Car_1.motro_state[3].total_encode_num / Car_MOTOR_PULSE_PER_CYCLE) * Car_PI * Car_CheLunZhiJing); //小车在Car_PID_CYCLE时间内转动的脉冲数/一圈的脉冲数再乘以直径就是路程
 
-        // taskEXIT_CRITICAL();  //退出临界区
+            printf("1:%f, 2:%f, 3:%f, 4:%f\r\n", (float)Car_1.motro_state[0].total_encode_num, (float)Car_1.motro_state[1].total_encode_num, (float)Car_1.motro_state[2].total_encode_num, (float)Car_1.motro_state[3].total_encode_num);
+            u1_printf("以走距离:%f, %f, %f, %f\r\n", Car_1.motro_state[0].distance,
+                      Car_1.motro_state[1].distance, Car_1.motro_state[2].distance, Car_1.motro_state[3].distance);
+
+            /* Car_Staright_Control()来自巡线,如果需要巡线的话取消注释 */
+            // Motor_Straight_Control_Num = Car_Staright_Control();
+            if (Car_1.direction == forward)
+            {
+                Location_Speed_Control(&Car_1);
+                Car_1.motro_state[0].speed_output_value_finally = Car_1.motro_state[0].speed_output_value + Motor_Straight_Control_Num;
+                Car_1.motro_state[1].speed_output_value_finally = Car_1.motro_state[1].speed_output_value - Motor_Straight_Control_Num;
+                Car_1.motro_state[2].speed_output_value_finally = Car_1.motro_state[2].speed_output_value + Motor_Straight_Control_Num;
+                Car_1.motro_state[3].speed_output_value_finally = Car_1.motro_state[3].speed_output_value - Motor_Straight_Control_Num;
+                Motor_Output(Car_1);
+                // 在非常接近目标位置时停止计算,免得浪费时纠正几毫米的误差,只需对一个电机计算就行了
+                if ((Car_1.motro_state[0].distance <= Car_1.motro_state[0].target_distance + 10) && (Car_1.motro_state[0].distance >= Car_1.motro_state[0].target_distance - 10))
+                {
+                    stop_count++;
+                    if (stop_count >= stop_count_target)
+                    {
+                        stop_count = 0;
+                        Car_1.direction = stop; //小车切换到停止状态
+                        u1_printf("以走距离:%f, %f, %f, %f\r\n", Car_1.motro_state[0].distance,
+                                  Car_1.motro_state[1].distance, Car_1.motro_state[2].distance, Car_1.motro_state[3].distance);
+                    }
+                }
+            }
+            if (Car_1.direction == stop)
+            {
+                u1_printf("停止\r\n");
+                Car_Stop(&Car_1);
+                stop_count = 0;
+            }
+            // taskEXIT_CRITICAL(); //退出临界区
+        }
         delay_ms(Car_PID_CYCLE);
     }
 }
@@ -334,7 +387,7 @@ void MPU6050_task(void *pvParameters)
         mpu_dmp_get_data(&pitch, &roll, &yaw);      //得到欧拉角
         MPU_Get_Accelerometer(&aacx, &aacy, &aacz); //得到加速度传感器数据
         MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);  //得到陀螺仪数据
-        u1_printf("%f  %f  %f  %d  %d  %d  %fC  \r\n", pitch, roll, yaw, gyrox, gyroy, gyroz, temp / 10.0);
+        // u1_printf("%f  %f  %f  %d  %d  %d  %fC  \r\n", pitch, roll, yaw, gyrox, gyroy, gyroz, temp / 10.0);
         delay_ms(5);
     }
 }

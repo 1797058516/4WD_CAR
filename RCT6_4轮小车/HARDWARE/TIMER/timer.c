@@ -235,23 +235,23 @@ int Read_Encode_Num(u8 TIMx)
     switch (TIMx)
     {
     case 3:
-        Car_1.motro1_state.encode_num = -((short)TIM3->CNT);                  //获取脉冲数
-        Car_1.motro1_state.total_encode_num += Car_1.motro1_state.encode_num; //总脉冲数相加
+        Car_1.motro_state[0].encode_num = -((short)TIM3->CNT);                  //获取脉冲数
+        Car_1.motro_state[0].total_encode_num += Car_1.motro_state[0].encode_num; //总脉冲数相加
         TIM3->CNT = 0;                                                        //清零
         break;
     case 4:
-        Car_1.motro2_state.encode_num = -((short)TIM4->CNT);                  //获取脉冲数
-        Car_1.motro2_state.total_encode_num += Car_1.motro2_state.encode_num; //总脉冲数相加
+        Car_1.motro_state[1].encode_num = ((short)TIM4->CNT);                  //获取脉冲数
+        Car_1.motro_state[1].total_encode_num += Car_1.motro_state[1].encode_num; //总脉冲数相加
         TIM4->CNT = 0;                                                        //清零
         break;
     case 5:
-        Car_1.motro3_state.encode_num = -((short)TIM5->CNT);                  //获取脉冲数
-        Car_1.motro3_state.total_encode_num += Car_1.motro3_state.encode_num; //总脉冲数相加
+        Car_1.motro_state[2].encode_num = -((short)TIM5->CNT);                  //获取脉冲数
+        Car_1.motro_state[2].total_encode_num += Car_1.motro_state[2].encode_num; //总脉冲数相加
         TIM5->CNT = 0;                                                        //清零
         break;
     case 8:
-        Car_1.motro4_state.encode_num = -((short)TIM8->CNT);                  //获取脉冲数
-        Car_1.motro4_state.total_encode_num += Car_1.motro4_state.encode_num; //总脉冲数相加
+        Car_1.motro_state[3].encode_num = ((short)TIM8->CNT);                  //获取脉冲数
+        Car_1.motro_state[3].total_encode_num += Car_1.motro_state[3].encode_num; //总脉冲数相加
         TIM8->CNT = 0;                                                        //清零
         break;
     default:
