@@ -14,7 +14,7 @@ rgb_thresholds   =[(30, 100, 15, 127, 15, 127),
 thresholds = (90, 100, -128, 127, -128, 127)
 #摄像头
 sensor.reset()
-sensor.set_vflip(1)#翻转摄像头
+#sensor.set_vflip(1)#翻转摄像头
 sensor.set_pixformat(sensor.RGB565)
 sensor.set_framesize(sensor.QVGA)
 sensor.skip_frames(time = 200)
@@ -22,69 +22,38 @@ sensor.skip_frames(time = 200)
 #sensor.set_auto_whitebal(False) # must be turned off for color tracking
 sensor.run(1)
 #PID
-def pid_timer(_error):
-    if last_t == 0 or dt > 1000:
-        dt = 0
-        integrator = 0
-    output+=error*kp
-    last_error=error
-    derivative = (error - self._last_error) / dt
-
-    print("time up:",timer)
-    print("param:",timer.callback_arg())
-#MODE_PERIODIC--连续回调
-#tim_pid = Timer(Timer.TIMER1, Timer.CHANNEL0, mode=Timer.MODE_PERIODIC, period=1000, unit=Timer.UNIT_MS, callback=pid_timer, arg=on_timer, start=False, priority=1, div=0)
-
-kp = ki = kd = integrator = imax = 0
-last_error = last_derivative = last_t = 0
+kp = 0.45
+ki = 0
+kd = 0
+integrator = 0
+last_error = 0
 dt=0.05  #50ms
 output = 0
+err=0
+target = 160
+feedback =0
+isBegin = True
+def pid_timer(tim):
+    #global kp,ki,kd,integrator,last_error,dt,output,target,feedback,isBegin
+    global kp,kd,ki,err,last_error,isBegin,output,dt,integrator
+    #if dt == 0 or dt_add > 1000:
+        #dt_add = 0
+        #integrator = 0
+    #err = target -feedback
+    print("err - last_error",err - last_error)
+    if (isBegin):
+        last_error = err;
+        isBegin = False;
+    integrator += ki*(err+last_error)/2
+    output=kp*err + integrator*dt +kd*(err - last_error)/ dt
+    last_error=err
+    print("err:",err)
+    print("integrator",integrator)
+    #print("output",output)
+    tim_pid.stop()
+#MODE_PERIODIC--连续回调 1000*1ms=1s
+tim_pid = Timer(Timer.TIMER1, Timer.CHANNEL0, mode=Timer.MODE_PERIODIC, period=100, unit=Timer.UNIT_MS, callback=pid_timer ,start=False, priority=1, div=0)
 
-class PID:
-    _kp = _ki = _kd = _integrator = _imax = 0
-    _last_error = _last_derivative = _last_t = 0
-    _RC = 1/(2 * pi * 20)
-    def __init__(self, p=0, i=0, d=0, imax=0):
-        self._kp = float(p)
-        self._ki = float(i)
-        self._kd = float(d)
-        self._imax = abs(imax)
-        self._last_derivative = float('nan')
-    def get_pid(self, error, scaler):
-        #tnow = millis()
-        #tnow =
-        dt = tnow - self._last_t
-        output = 0
-        if self._last_t == 0 or dt > 1000:
-            dt = 0
-            self.reset_I()
-        self._last_t = tnow
-        delta_time = float(dt) / float(1000)
-        output += error * self._kp
-        if abs(self._kd) > 0 and dt > 0:
-            if isnan(self._last_derivative):
-                derivative = 0
-                self._last_derivative = 0
-            else:
-                derivative = (error - self._last_error) / delta_time
-            derivative = self._last_derivative + \
-                                     ((delta_time / (self._RC + delta_time)) * \
-                                        (derivative - self._last_derivative))
-            self._last_error = error
-            self._last_derivative = derivative
-            output += self._kd * derivative
-        output *= scaler
-        if abs(self._ki) > 0 and dt > 0:
-            self._integrator += (error * self._ki) * scaler * delta_time
-            if self._integrator < -self._imax: self._integrator = -self._imax
-            elif self._integrator > self._imax: self._integrator = self._imax
-            output += self._integrator
-        return output
-    def reset_I(self):
-        self._integrator = 0
-        self._last_derivative = float('nan')
-#实例化PID
-pan_pid = PID(p=0.07, i=0, imax=90) #脱机运行或者禁用图像传输，使用这个PID
 #PWM 通过定时器配置，接到 IO17 引脚
 tim1 = Timer(Timer.TIMER0, Timer.CHANNEL0, mode=Timer.MODE_PWM)
 tim2 = Timer(Timer.TIMER0, Timer.CHANNEL1, mode=Timer.MODE_PWM)
@@ -98,6 +67,10 @@ uart_A = UART(UART.UART1, 115200, 8, 0, 1, timeout=1000, read_buf_len=100)
 
 #舵机对应不同角度,num范围为-90--90
 def servoangle(num,angle):
+    if angle>60:
+        angle = 60
+    elif angle<-60:
+        angle = -60
     freq=angle*(5/90)
     duty=7.5+freq
     if num==1:
@@ -127,23 +100,27 @@ def find_target():
         for b in blobs:
             tmp=img.draw_rectangle(b[0:4])##在图像上绘制一个矩形。
             tmp=img.draw_cross(b[5], b[6])##画十字交叉
-
-
 while True:
     #utime.sleep_ms(30)
-    servoangle(1,0)
-    uart1_rec()
+    #servoangle(1,-60)
+    #uart1_rec()
     #img=sensor.snapshot().binary([thresholds], invert=False, zero=True).mean(1)
-    #tim_pid.start()
+
+    #tim_pid.stop()
     img=sensor.snapshot()
-    blobs=img.find_blobs([rgb_thresholds[0]])
+    blobs=img.find_blobs([rgb_thresholds[0]],area_threshold=300)
     if blobs :
+        tim_pid.start()
         for b in blobs:
             tmp=img.draw_rectangle(b[0:4])##在图像上绘制一个矩形。
             tmp=img.draw_cross(b[5], b[6])##画十字交叉
-            x=b.cx()
-            print(b[5])
-            uart_A.write('\1'+","+str(b[5])+","+str(b[6])+","+"\r\n")
+            feedback=b[5]
+            err=target-feedback
+            servoangle(1,output)
+            #print(b[5])
+            #uart_A.write('\1'+","+str(b[5])+","+str(b[6])+","+"\r\n")
+            uart_A.write("160"+","+str(b[5])+"\r\n")
+    #uart_A.write("160"+","+"120"+"\r\n")
     #find_target()
 
     #pan_output=pan_pid.get_pid(10,1)/2
